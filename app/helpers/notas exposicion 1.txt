@@ -1,0 +1,8 @@
+dentro de la creación de la fila nueva se piensa copiar la info ..
+pero debido a la cantidad de errores , porque no cambian la información como debe ser, esto obliga a que la persona revise campo a campo, dado que solo es una vez por semestre.
+
+
+para asegurar la ciberseguridad, y evitando una mala practica. Fácilmente con un bot pueden saturar el servidor, haciendo ingreso de info. en el peor de los casos pueden hacer colapsar el sistema.
+
+
+Estamos haciendo los últimos ajustes. Dar aviso a tecnología, para que el administrador del sistema haga el ajuste requerido.

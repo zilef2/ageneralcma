@@ -1,0 +1,3 @@
+
+# Crear BASEDEDATOS
+tablas: 
