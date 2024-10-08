@@ -47,27 +47,37 @@
     <div class="container">
         <div class="message">
             <b>Llaves pendientes:</b>
-            <p>{{ $mailData['salones'] }}</p>
             <br>
-                
+            @if($mailData['salones'] != '')
+                <p>{{ $mailData['salones'] }}</p>
+            @endif
+            <br>
             <b>Total de HDMI: 10</b>
-            <p>{{ $mailData['HDMI'] }}</p>
+            <br>
+            @if($mailData['HDMI'] != '')
+                <p>HDMI pendientes: </p>
+                <p>{{ $mailData['HDMI'] }}</p>
+            @endif
             <br>
             <b>Total de Computadores: 5</b>
-            <p>{{ $mailData['computador'] }}</p>
+            @if($mailData['computador'] != '')
+                <p>Computadores pendientes</p>
+                <p>{{ $mailData['computador'] }}</p>
+            @endif
             <br>
             <p>{{ $mailData['demoras'] }}</p>
             <br>
             <p>{{ $mailData['observaString'] }}</p>
+            <br>
         </div>
         <div class="message">
             <p>Alejandro Madrid Felizzola</p>
             <p>Medios audiovisuales</p>
             <p>Institución Universitaria Colegio Mayor de Antioquia</p>
-{{--            <p>Tel: 444 56 11 Ext. 201</p>--}}
-{{--            <p>Carrera 78 # 65 - 46</p>--}}
-{{--            <p>Medellín - Colombia</p>--}}
-{{--            <p>www.colmayor.edu.co</p>--}}
+            <p>Tel: 444 56 11 Ext. 201</p>
+            <p>Carrera 78 # 65 - 46</p>
+            <p>Medellín - Colombia</p>
+            <p>www.colmayor.edu.co</p>
         </div>
     </div>
 </body>
