@@ -23,9 +23,8 @@ class UserSeeder extends Seeder
 
         $superadmin = User::create([
             'name'              => 'Superadmin',
-            'email'             => 'ajelof2+11@gmail.com',
-//            'password'          => bcrypt($genPa.'~8~po'), // cont_ins~8~po
-            'password'          => bcrypt($genPa),
+            'email'             => 'ajelof2+101@gmail.com',
+            'password'          => bcrypt('a'),
             'email_verified_at' => date('Y-m-d H:i'),
             'sexo' => $genero,
             'identificacion' => '11232456',
@@ -37,18 +36,15 @@ class UserSeeder extends Seeder
             'name'              => "$nombreAdmin $App",
             'email'             => "alejofg2+11@gmail.com",
             'password'          => bcrypt($genPa),
-//            'password'          => bcrypt($genPa.'uiu'), //cont_insuiu
             'email_verified_at' => date('Y-m-d H:i'),
             'sexo' => $genero,
             'identificacion' => '11232411',
             'celular' => '11232454',
-
         ]);$admin->assignRole('admin');
 
         //baja categoria
         $nombresGenericos = [
             ['name' => 'transacciones', 'cc'=> '1234444', 'rol' => 'tesorera'],
-//            ['name' => 'bgenerico', 'cc'=> '1234459', 'rol' => 'copasst'],
 //            ['name' => 'cgenerico', 'cc'=> '1234445', 'rol' => 'lider_del_proceso'],
 //            ['name' => 'dgenerico', 'cc'=> '1234446', 'rol' => 'verificador'],
         ];

@@ -23,8 +23,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
 
             UserSeeder::class,
-            UserSeederCustomize::class,
-            ConceptoFlujoSeeder::class,
+            LLavesDocentesObjectosSeeder::class,
         ]);
     }
 }

@@ -7,13 +7,9 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {form} from './form';
 import InputError from "@/Components/InputError.vue";
 import SelectInput from "@/Components/SelectInput.vue";
-import {number_format, plata_format} from "@/global";
 import Toast from "@/Components/Toast.vue";
 import {throttle} from 'lodash';
 
-import MasyMenos from "@/Pages/MasyMenos.vue";
-import TablaResumenEnviado from "@/Pages/TablaResumenEnviado.vue";
-import {AumentarForm, DisminuirForm} from "@/Pages/formFunctions";
 
 
 const props = defineProps({

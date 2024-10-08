@@ -7,10 +7,7 @@ use App\Http\Controllers\ParametrosController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\CuentaController;
 use App\Http\Controllers\TransaccionController;
-use App\Http\Controllers\PorcentajeInteresCuentaController;
-use App\Http\Controllers\ComprobanteController;
 
 use App\Http\Controllers\ZipController;
 use App\Http\Controllers\SubiExcelController;
@@ -19,6 +16,9 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
+
+use App\Mail\EstadoMedios;
+use Illuminate\Support\Facades\Mail;
 
 //Route::get('/', [FormularioController::class, 'welcome'])->name('welcome');
 Route::get('/', function () { return redirect('/login'); });
@@ -29,6 +29,8 @@ Route::get('/setLang/{locale}', function ($locale) {
     Session::put('locale', $locale);
     return back();
 })->name('setlang');
+
+Route::get('/send', [\App\Http\Controllers\MailsMedios::class,'principal'])->name('mail.principal');
 
 //,'handleErrorZilef'
 //, 'verified'
@@ -64,6 +66,7 @@ Route::middleware(['auth'])->group(callback: function () {
 	//aquipues
     //</editor-fold>
 
+    
 });
 
 

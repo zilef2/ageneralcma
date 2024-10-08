@@ -9,7 +9,7 @@ class llaves extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'id',
+        'nombre',
     ];
 
 }

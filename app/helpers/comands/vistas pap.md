@@ -14,6 +14,8 @@ php artisan copy:u objetos
 
 ### Utilidades
 para borrar:  php artisan rm:crud post --force
+### email
+php artisan make:mail EstadoMedios
 
 
 ###laravel excel
