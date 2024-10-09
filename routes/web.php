@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 
-use App\Mail\EstadoMedios;
+use App\Mail\MailableEstadoMedios;
 use Illuminate\Support\Facades\Mail;
 
 //Route::get('/', [FormularioController::class, 'welcome'])->name('welcome');

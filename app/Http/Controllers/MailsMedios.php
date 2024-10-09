@@ -2,22 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\EstadoMedios;
+use App\helpers\GranString;
+use App\Mail\MailableEstadoMedios;
 use DateTime;
 use Illuminate\Support\Facades\Mail;
 
 class MailsMedios extends Controller
 {
-    public function principal(): void
+    public function principal()
     {
-
-        $infoGigante = (strtolower($this->infoGigante));
+        
+        $infoGigante = GranString::peroEstoQueEsss();
+        $infoGigante = (strtolower($infoGigante));
+        
         preg_match_all("/salón: ([A-Z0-9]+)/i", $infoGigante, $matches);
         $salones = implode(", ", $matches[1]);
         if (strcmp("", $salones) === 0) {
             $salones = "No hay salones pendientes";
         }
-        preg_match_all("/hdmi([0-9]+)/", $infoGigante, $matches);
+        preg_match_all("/hdmi\s([1-9]|1[0-9]|20)/i", $infoGigante, $matches);
+        foreach ($matches[1] as $index => $match) {
+            $matches[1][$index] = 'HDMI#'. $match;
+        }
         $HDMI = implode(", ", $matches[1]);
         if (strcmp("", $HDMI) === 0) {
             $HDMI = "No hay HDMI pendientes";
@@ -77,10 +83,6 @@ class MailsMedios extends Controller
         //</editor-fold>
 
 
-        echo "<br>Llaves pendientes: " . $salones . "\n";
-        echo "<br>Computadores: " . $computador . "\n\n";
-        echo "<br>HDMI: " . $HDMI . "\n\n";
-
         preg_match_all("/fin: \d+\s+➕elementos prestados:\s+(.*?)(\n|🗑️)/s", $infoGigante, $matches);
         $HayObservaciones = !empty($matches[1]);
         $observaciones = [];
@@ -93,103 +95,43 @@ class MailsMedios extends Controller
 
         if (strcmp($demoras, "") !== 0) {
             $demoras = "Incumplimientos:  " . $demoras . "\n\n";
-            echo "<br> $demoras";
         } else {
             if (!$HayObservaciones)
                 $observaciones[0] = "Sin observaciones adicionales";
         }
         $Observaciones = implode(",", $observaciones);
-        echo "<br>Observaciones: " . $Observaciones . "\n\n";
 
-        if (strlen($this->infoGigante) > 100) {
+        if (strlen($infoGigante) > 100) {
             Mail::
-//            to("alejandro.madrid@colmayor.edu.co")
-            to("tecnologia@colmayor.edu.co")
-                ->cc("viceadministrativa@colmayor.edu.co")
-                ->cc("simon.pelaez@colmayor.edu.co")
-                ->cc("alejandro.madrid@colmayor.edu.co")
-                ->send(new EstadoMedios([
+            to("alejandro.madrid@colmayor.edu.co")
+                ->cc(["simon.pelaez@colmayor.edu.co","tecnologia@colmayor.edu.co","viceadministrativa@colmayor.edu.co"])
+                ->send(new MailableEstadoMedios([
                     "observaString" => $Observaciones,
                     "computador" => $computador,
                     "HDMI" => $HDMI,
                     "salones" => $salones,
                     "demoras" => $demoras,
                 ]));
-
-            echo "<br> <br>Email enviado";
+            return view('emails.estadoCopiar', [
+                'mailData' => [
+                    "observaString" => $Observaciones,
+                    "computador" => $computador,
+                    "HDMI" => $HDMI,
+                    "salones" => $salones,
+                    "demoras" => $demoras,
+                ]
+            ]);
         } else {
-            echo "<br> <br>Email NO enviado";
+            echo 'Email no enviado';
+            Mail::to("alejandro.madrid@colmayor.edu.co")->cc('ajelof2@gmail.com')
+                ->send(new MailableEstadoMedios([
+                    "observaString" => 'no se envio',
+                    "computador" => 'no se envio',
+                    "HDMI" => 'no se envio',
+                    "salones" => 'no se envio',
+                    "demoras" => 'no se envio',
+                ]));
         }
+
     }
-
-    public string $infoGigante = "
-   Préstamo generado:
-Salón: C105
-
-Usuario: Edwin Jader Suaza Estrada
-
-Cédula: 8432186
-
-Dependencia: Facultad De Ciencias Sociales Y Educacion
-
-Prestó: Practicante
-
-Fecha:lunes 7 de octubre del 2024 18:04
-
-Inicio: 18
-
-Fin: 22
-
-Elementos prestados:
-➕
-Llave 1
-
-🗑️
-Devolver todo
-Préstamo generado:
-Usuario: Catalina Escobar Tovar
-
-Cédula: 1015393469
-
-Dependencia: Facultad De Arquitectura E Ingenieria
-
-Prestó: Practicante
-
-Fecha:lunes 7 de octubre del 2024 09:17
-
-Inicio: 9
-
-Fin: 17
-
-devuelve mañana a las 6 a.m
-
-🗑️
-Elementos prestados:
-➕
-P39628
-🗑️
-Devolver todo
-Préstamo generado:
-Usuario: Maria Camila Gonzalez Alvarez
-
-Cédula: 1193131567
-
-Dependencia: Vicerrectoría Administrativa y Financiera
-
-Prestó: Practicante
-
-Fecha:jueves 3 de octubre del 2024 15:33
-
-Inicio: 15
-
-Fin: 15
-
-se presta hasta el 4 de octubre
-
-🗑️
-Elementos prestados:
-➕
-P39641
-
-";
 }

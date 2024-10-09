@@ -20,7 +20,7 @@ import SwitchLangNavbar from '@/Components/SwitchLangNavbar.vue';
 <!--                            <SwitchDarkMode />-->
 <!--                        </div>-->
                     </div>
-                    <p class="text-xl text-center">Tesoreria IUCMA</p>
+                    <p class="text-xl text-center">IUCMA correos</p>
                     <slot />
                 </div>
 <!--                <div-->

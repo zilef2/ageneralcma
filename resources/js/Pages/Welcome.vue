@@ -51,10 +51,9 @@ const data = reactive({
                                     d="M21.736 0H2.264A2.264 2.264 0 000 2.264v19.472A2.264 2.264 0 002.264 24h19.472A2.264 2.264 0 0024 21.736V2.264A2.264 2.264 0 0021.736 0zM12 20.658a8.66 8.66 0 110-17.32 8.66 8.66 0 010 17.32zm0-14.345a5.685 5.685 0 100 11.37 5.685 5.685 0 000-11.37zm0 8.792a3.107 3.107 0 110-6.214 3.107 3.107 0 010 6.214z"/>
                             </svg>
                         </div>
-                        <h1 class="text-4xl font-bold text-blue-600">Sistema de Registro e Inspecciones</h1>
+                        <h1 class="text-4xl font-bold text-blue-600">Sistema de proposito general</h1>
                         <p class="mt-4 text-lg text-gray-700">
-                            Este software permite gestionar de manera eficiente los registros e inspecciones del Colegio Mayor de Antioquia,
-                            asegurando precisión y rapidez en los procesos administrativos.
+                            Aun no se ha definido un objetivo claro para este proycto
                         </p>
                     </div>
                     <div class="flex items-center">

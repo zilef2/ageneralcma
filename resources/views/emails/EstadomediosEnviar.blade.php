@@ -42,23 +42,21 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <div class="message">
-            <b>Llaves pendientes:</b>
-            <br>
+            <p><b>Llaves pendientes:</b></p>
             @if($mailData['salones'] != '')
                 <p>{{ $mailData['salones'] }}</p>
             @endif
-            <br>
             <b>Total de HDMI: 10</b>
             <br>
             @if($mailData['HDMI'] != '')
+                @if($mailData['HDMI'] != 'No hay HDMI pendientes')
                 <p>HDMI pendientes: </p>
+                @endif
                 <p>{{ $mailData['HDMI'] }}</p>
             @endif
-            <br>
             <b>Total de Computadores: 5</b>
             @if($mailData['computador'] != '')
                 <p>Computadores pendientes</p>
@@ -68,7 +66,6 @@
             <p>{{ $mailData['demoras'] }}</p>
             <br>
             <p>{{ $mailData['observaString'] }}</p>
-            <br>
         </div>
         <div class="message">
             <p>Alejandro Madrid Felizzola</p>
@@ -79,6 +76,7 @@
             <p>Medellín - Colombia</p>
             <p>www.colmayor.edu.co</p>
         </div>
+        
     </div>
 </body>
 </html>

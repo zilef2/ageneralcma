@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class EstadoMedios extends Mailable
+class MailableEstadoMedios extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -39,7 +39,7 @@ class EstadoMedios extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.estadoOriginal',
+            view: 'emails.EstadomediosEnviar',
             with: [
                 'mailData' => $this->mailData,  // Pasa los datos a la vista
             ],
