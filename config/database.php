@@ -42,6 +42,19 @@ return [
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
+//        'secundaria' => [
+//            'driver' => 'mysql',
+//            'host' => env('DB_HOST_SECUNDARIA', '10.3.1.110'),
+//            'port' => env('DB_PORT_SECUNDARIA', '3306'),
+//            'database' => env('DB_DATABASE_SECUNDARIA', 'dbsistemamedios'),
+//            'username' => env('DB_USERNAME_SECUNDARIA', 'dbsistemamedios'),
+//            'password' => env('DB_PASSWORD_SECUNDARIA', 'jmIEyu@hWFSkz887p'),
+//            'charset' => 'utf8mb4',
+//            'collation' => 'utf8mb4_unicode_ci',
+//            'prefix' => '',
+//            'strict' => true,
+//            'engine' => null,
+//        ],
 
         'mysql' => [
             'driver' => 'mysql',

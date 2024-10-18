@@ -11,10 +11,29 @@ class MailsMedios extends Controller
 {
     public function principal()
     {
-        
+
         $infoGigante = GranString::peroEstoQueEsss();
+
+        if(strlen($infoGigante) < 20){
+            Mail::to("alejandro.madrid@colmayor.edu.co")->send(new MailableEstadoMedios([
+                    "observaString" => $infoGigante,
+                    "computador" => 'String muy corto',
+                    "HDMI" => 'String muy corto',
+                    "salones" => 'String muy corto',
+                    "demoras" => 'String muy corto',
+                ]));
+             return view('emails.estadoCopiar', [
+                'mailData' => [
+                    "observaString" => $infoGigante,
+                    "computador" => 'String muy corto',
+                    "HDMI" => 'String muy corto',
+                    "salones" => 'String muy corto',
+                    "demoras" => 'String muy corto',
+                ]
+            ]);
+        }
         $infoGigante = (strtolower($infoGigante));
-        
+
         preg_match_all("/salón: ([A-Z0-9]+)/i", $infoGigante, $matches);
         $salones = implode(", ", $matches[1]);
         if (strcmp("", $salones) === 0) {
@@ -101,10 +120,16 @@ class MailsMedios extends Controller
         }
         $Observaciones = implode(",", $observaciones);
 
-        if (strlen($infoGigante) > 100) {
-            Mail::
-            to("alejandro.madrid@colmayor.edu.co")
-                ->cc(["simon.pelaez@colmayor.edu.co","tecnologia@colmayor.edu.co","viceadministrativa@colmayor.edu.co"])
+        $hora = intval(date('H'));
+        $mins = intval(date('i'));
+        $conCopia = [];
+        if($hora > 21 && $mins > 50){
+            $conCopia = ["simon.pelaez@colmayor.edu.co","tecnologia@colmayor.edu.co","viceadministrativa@colmayor.edu.co"];
+        }
+
+        if (strlen($infoGigante) > 3) {
+            Mail::to("alejandro.madrid@colmayor.edu.co")
+                ->cc($conCopia)
                 ->send(new MailableEstadoMedios([
                     "observaString" => $Observaciones,
                     "computador" => $computador,
@@ -119,6 +144,7 @@ class MailsMedios extends Controller
                     "HDMI" => $HDMI,
                     "salones" => $salones,
                     "demoras" => $demoras,
+                    "conCopia" => $conCopia,
                 ]
             ]);
         } else {
@@ -132,6 +158,5 @@ class MailsMedios extends Controller
                     "demoras" => 'no se envio',
                 ]));
         }
-
     }
 }

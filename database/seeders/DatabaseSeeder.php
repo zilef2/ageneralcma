@@ -25,5 +25,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             LLavesDocentesObjectosSeeder::class,
         ]);
+
+        $usuarios = DB::connection('secundaria')->table('usuarios')->get();
     }
 }
