@@ -13,6 +13,7 @@ const props = defineProps({
     roles: Number,
     rolesNameds: Object,
     numberPermissions: Number,
+    horarios: Object,
 })
 
 const dashboard =[
@@ -74,6 +75,13 @@ const downloadAnexos = () => {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="mx-auto">
+                <ul>
+                    <li>
+                        {{ props.horarios }}
+                    </li>
+                </ul>
             </div>
 
 

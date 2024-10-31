@@ -123,20 +123,20 @@ class MailsMedios extends Controller
         $hora = intval(date('H'));
         $mins = intval(date('i'));
         $conCopia = [];
-        if($hora > 21 && $mins > 50){
+        if($hora > 21 && $mins > 40){
             $conCopia = ["simon.pelaez@colmayor.edu.co","tecnologia@colmayor.edu.co","viceadministrativa@colmayor.edu.co"];
         }
 
         if (strlen($infoGigante) > 3) {
-            Mail::to("alejandro.madrid@colmayor.edu.co")
-                ->cc($conCopia)
-                ->send(new MailableEstadoMedios([
-                    "observaString" => $Observaciones,
-                    "computador" => $computador,
-                    "HDMI" => $HDMI,
-                    "salones" => $salones,
-                    "demoras" => $demoras,
-                ]));
+//            Mail::to("alejandro.madrid@colmayor.edu.co")
+//                ->cc($conCopia)
+//                ->send(new MailableEstadoMedios([
+//                    "observaString" => $Observaciones,
+//                    "computador" => $computador,
+//                    "HDMI" => $HDMI,
+//                    "salones" => $salones,
+//                    "demoras" => $demoras,
+//                ]));
             return view('emails.estadoCopiar', [
                 'mailData' => [
                     "observaString" => $Observaciones,
@@ -157,6 +157,15 @@ class MailsMedios extends Controller
                     "salones" => 'no se envio',
                     "demoras" => 'no se envio',
                 ]));
+            return view('emails.estadoCopiar', [
+                'mailData' => [
+                    "observaString" => 'no se envio',
+                    "computador" => 'no se envio',
+                    "HDMI" => 'no se envio',
+                    "salones" => 'no se envio',
+                    "demoras" => 'no se envio',
+                ]
+            ]);
         }
     }
 }

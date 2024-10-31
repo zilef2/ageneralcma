@@ -20,6 +20,8 @@ return [
 		'llaves' => 'llaves',
 		'objetos' => 'Objetos',
 		'objetos' => 'objetos',
+		'horario' => 'Horario',
+		'Horario' => 'Horario',
 		//aquipues
     ],
 
@@ -30,6 +32,8 @@ return [
 		'llaves' => 'llaves',
 		'objetos' => 'Objetos',
 		'objetos' => 'objetos',
+		'horario' => 'Horario',
+		'Horario' => 'Horario',
 		//aquipues
 
         //transaccion

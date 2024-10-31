@@ -24,13 +24,10 @@ const toggleContent2 = () => {
 }
 
 const sidebarButtonsNormal = [ //SAME AS WEB.PHP
-    'cuenta',
-    'transaccion',
-    'Comprobante',
-    'concepto_flujo',
 	'docentes',
 	'llaves',
 	'objetos',
+	'Horario',
 	//aquipuesSide
 ];
 

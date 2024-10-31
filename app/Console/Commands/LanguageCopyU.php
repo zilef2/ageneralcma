@@ -16,8 +16,7 @@ class LanguageCopyU extends Command
 
         $directory = 'lang/es/app.php';
         $files = glob($directory);
-
-
+        
 
         $pattern = '/\/\/aquipues/';
 
@@ -27,7 +26,7 @@ class LanguageCopyU extends Command
             $content = file_get_contents($file);
             if (!str_contains($content, $pattern)) {
                 $content2 = preg_replace($pattern, $insertable, $content);
-                //                $content2 = preg_replace($pattern, "$0$insertable", $content);
+                //$content2 = preg_replace($pattern, "$0$insertable", $content);
                 file_put_contents($file, $content2);
                 if ($content == $content2)
                     $this->info("Language updated: $file\n");

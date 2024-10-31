@@ -14,21 +14,13 @@ class UserSeederCustomize extends Seeder
     /**
      * Run the database seeds.
      * php artisan db:seed --class=UserSeeder2.php
-     *
+     * ir a CargosModelos.php
      */
     public function run(){
         $genPa = env('sap_gen');
-
-//        $tiposResponsable = DB::table('tipo_users')->pluck('nombre')->toArray();
-
         $nombresGenericos = [
-            ['name' => 'Sandra Cristina Bedoya Cardenas', 'cc' => '112', 'email' => 'sandra.bedoya@colmayor.edu.co', 'sexo' => 'Femenino', 'rol' => 'tesorera'],
-//            ['name' => 'Jennyfer Figueroa Cano', 'cc' => '113', 'email' => 'jennyfer.figueroa@colmayor.edu.co', 'sexo' => 'Femenino', 'rol' => 'administrativo'],
+            ['name' => 'Sandra Cristina Bedoya Cardenas', 'cc' => '112', 'email' => 'sandra.bedoya@colmayor.edu.co', 'sexo' => 'Femenino', 'rol' => 'Lider'],
         ];
-        /* ROLES
-            'tesorera',//1
-        */
-
         $myhelp = new Myhelp();
         foreach ($nombresGenericos as $key => $value) {
             $primeraParte = $myhelp->cortarFrase($value['name'],1);
@@ -37,7 +29,7 @@ class UserSeederCustomize extends Seeder
             $unUsuario = User::create([
                 'name' => $value['name'],
                 'email' => $value['email'],
-                'password' => bcrypt($primeraParte . '+*'),
+                'password' => bcrypt($primeraParte),
                 'email_verified_at' => date('Y-m-d H:i'),
                 'identificacion' => $value['cc'],
                 'celular' => '123456',

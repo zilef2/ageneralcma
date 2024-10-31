@@ -42,19 +42,19 @@ return [
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
-//        'secundaria' => [
-//            'driver' => 'mysql',
-//            'host' => env('DB_HOST_SECUNDARIA', '10.3.1.110'),
-//            'port' => env('DB_PORT_SECUNDARIA', '3306'),
-//            'database' => env('DB_DATABASE_SECUNDARIA', 'dbsistemamedios'),
-//            'username' => env('DB_USERNAME_SECUNDARIA', 'dbsistemamedios'),
-//            'password' => env('DB_PASSWORD_SECUNDARIA', 'jmIEyu@hWFSkz887p'),
-//            'charset' => 'utf8mb4',
-//            'collation' => 'utf8mb4_unicode_ci',
-//            'prefix' => '',
-//            'strict' => true,
-//            'engine' => null,
-//        ],
+        'secondary_db' => [
+            'driver' => 'mysql',
+            'host' => env('DB_SECONDARY_HOST', '127.0.0.1'),
+            'port' => env('DB_SECONDARY_PORT', '3306'),
+            'database' => env('DB_SECONDARY_DATABASE'),
+            'username' => env('DB_SECONDARY_USERNAME'),
+            'password' => env('DB_SECONDARY_PASSWORD'),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
 
         'mysql' => [
             'driver' => 'mysql',
@@ -138,7 +138,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [
