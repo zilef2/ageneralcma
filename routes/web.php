@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Mail;
 //Route::get('/', [FormularioController::class, 'welcome'])->name('welcome');
 Route::get('/', function () { return redirect('/login'); });
 //Route::get('/dashboard', [dashboardController::class, 'Dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/dashboard', [dashboardController::class, 'Dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard/{nombredoc?}', [dashboardController::class, 'Dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/setLang/{locale}', function ($locale) {
     Session::put('locale', $locale);
@@ -64,10 +64,11 @@ Route::middleware(['auth'])->group(callback: function () {
 	Route::resource("/llaves", \App\Http\Controllers\LlavesController::class);
 	Route::resource("/objetos", \App\Http\Controllers\ObjetosController::class);
 	Route::resource("/Horario", \App\Http\Controllers\HorarioController::class);
+	Route::resource("/prestamoActual", \App\Http\Controllers\PrestamoActualController::class);
 	//aquipues
     //</editor-fold>
 
-    
+
 });
 
 

@@ -1,43 +1,44 @@
 <script setup>
 import Breadcrumb from '@/Components/Breadcrumb.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { ChevronRightIcon, KeyIcon, ShieldCheckIcon, UserIcon } from '@heroicons/vue/24/solid';
-import { Head, Link } from '@inertiajs/vue3';
-import { watchEffect } from 'vue';
+import {ChevronRightIcon, KeyIcon, ShieldCheckIcon, UserIcon} from '@heroicons/vue/24/solid';
+import {Head, Link} from '@inertiajs/vue3';
+import {watchEffect} from 'vue';
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 
 
-    // roles: Number,
+// roles: Number,
 const props = defineProps({
     users: Number,
     roles: Number,
     rolesNameds: Object,
     numberPermissions: Number,
-    horarios: Object,
+    Obtenidos: Object,
+    Busqueda: Object,
 })
 
-const dashboard =[
+const dashboard = [
     // 'Informes',
     // 'roles',
 ];
-const dashLinks =[
+const dashLinks = [
     // 'Informes',
     // 'roles',
 ];
 const dashSinS = dashboard.map((value, index, array) => {
-    return value.slice(0,-1)
+    return value.slice(0, -1)
 })
-const colores =[
+const colores = [
     'bg-gray-400',
     // 'bg-gray-500',
     // 'bg-gray-600',
 ];
-const descripcion =[
+const descripcion = [
     'Descripcion',
     // 'Descripcion',
     // 'descripcion',
 ];
-const laImg =[
+const laImg = [
     'KeyIcon',
     // 'KeyIcon',
     // 'KeyIcon',
@@ -50,9 +51,9 @@ const downloadAnexos = () => {
 
 <template>
 
-    <Head title="Dashboard" />
+    <Head title="Dashboard"/>
     <AuthenticatedLayout>
-        <Breadcrumb :title="'Resumen'" :breadcrumbs="[]" />
+        <Breadcrumb :title="'Resumen'" :breadcrumbs="[]"/>
         <div class="space-y-4">
             <div class="grid gap-6 text-white shadow-sm py-1 sm:grid-cols-3 lg:grid-cols-3 dark:text-gray-100">
                 <div
@@ -67,7 +68,8 @@ const downloadAnexos = () => {
                         </div>
                         <div class="mt-4 flex items-center justify-between">
 
-                            <Link :href="route(dashLinks[index]+'.index')" class="flex font-bold items-center space-x-4 mx-2">
+                            <Link :href="route(dashLinks[index]+'.index')"
+                                  class="flex font-bold items-center space-x-4 mx-2">
                                 <button class="px-4 py-2 bg-white text-black rounded-full shadow-md focus:outline-none">
                                     Ver
                                 </button>
@@ -76,30 +78,116 @@ const downloadAnexos = () => {
                     </div>
                 </div>
             </div>
-            <div class="mx-auto">
-                <ul>
-                    <li>
-                        {{ props.horarios }}
-                    </li>
-                </ul>
+
+            <div class="grid gap-6 shadow-sm py-1 sm:grid-cols-1 dark:text-gray-100">
+                <div class="mx-auto">
+                    <p class="my-4 text-xl font-bold text-center">Los que faltan 10pm</p>
+                    <ul>
+                        <div v-if="props.Obtenidos.losQueFaltan"
+                             class="grid gap-6 shadow-sm py-1 sm:grid-cols-3 dark:text-gray-100">
+                            <li v-for="bus in props.Obtenidos.losQueFaltan">
+                                horaInicio : {{ bus.horaInicio }}
+                                horaFin : {{ bus.horaFin }}
+
+                            </li>
+                        </div>
+                        <div v-else> Sin Busqueda = {{ props.Busqueda}}</div>
+                    </ul>
+                </div>
+            </div>
+            <div class="grid gap-6 shadow-sm py-1 sm:grid-cols-1 dark:text-gray-100">
+                <div class="mx-auto">
+                    <p class="my-4 text-xl font-bold text-center">Busqueda</p>
+                    <ul>
+                        <div v-if="props.Busqueda"
+                             class="grid gap-6 shadow-sm py-1 sm:grid-cols-3 dark:text-gray-100">
+                            <li v-for="bus in props.Busqueda">
+                                horaInicio : {{ bus.horaInicio }}
+                                horaFin : {{ bus.horaFin }}
+                                docid : {{ bus.docid }}
+                                nombredoc : {{ bus.nombre }}
+                                aulaId : {{ bus.aulaId }}
+                                nombreAula : {{ bus.nombreAula }}
+
+                            </li>
+                        </div>
+                        <div v-else> Sin Busqueda = {{ props.Busqueda}}</div>
+                    </ul>
+                </div>
+            </div>
+            <div class="grid gap-6 shadow-sm py-1 sm:grid-cols-3 4xl:grid-cols-3 dark:text-gray-100">
+                <div class="mx-auto ">
+                    <ul>
+                        horarios
+                        <div v-if="props.Obtenidos.horarios">
+                            <li v-for="hor in props.Obtenidos.horarios">
+                                aulaId : {{ hor.aulaId }}
+                                docenteId : {{ hor.docenteId }}
+                            </li>
+                        </div>
+                        <div v-else> Sin horarios</div>
+                    </ul>
+                </div>
+                <div class="mx-auto">
+                    <ul>
+                        docentes
+                        <div v-if="props.Obtenidos.docentes">
+                            <li v-for="doc in props.Obtenidos.docentes">
+                                nombre : {{ doc.nombre }}
+                                id : {{ doc.id }}
+                            </li>
+                        </div>
+                        <div v-else> Sin docentes</div>
+                    </ul>
+                </div>
+                <div class="mx-auto">
+                    <ul>
+                        Aulas
+                        <div v-if="props.Obtenidos.AulaAqui">
+                            <li v-for="doc in props.Obtenidos.AulaAqui">
+                                nombreAula : {{ doc.nombreAula }}
+                                capacidad : {{ doc.capacidad }}
+                                tipoAula : {{ doc.tipoAula }}
+                                disponible : {{ doc.disponible }}
+                            </li>
+                        </div>
+                        <div v-else> Sin docentes</div>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="grid gap-6 shadow-sm py-1 sm:grid-cols-1 dark:text-gray-100">
+                <div class="mx-auto">
+                    <p class="my-4 text-xl font-bold text-center">Prestamos</p>
+                    <ul>
+                        <div v-if="props.Obtenidos.prestamo"
+                             class="grid gap-6 shadow-sm py-1 sm:grid-cols-3 dark:text-gray-100">
+                            <li v-for="doc in props.Obtenidos.prestamo">
+                                docenteid : {{ doc.docenteId }}
+                                aulaId : {{ doc.aulaId }}
+                            </li>
+                        </div>
+                        <div v-else> Sin prestamo</div>
+                    </ul>
+                </div>
             </div>
 
 
-<!--            <h2 class="text-4xl mt-32">Roles</h2>-->
-<!--            <div class="grid grid-cols-2 gap-2">-->
-<!--                <div v-for="(rol, index) in rolesNameds"-->
-<!--                    :key="index"-->
-<!--                    class="col-span-1 px-4 py-6 my-2 w-5/6 flex justify-between-->
-<!--                     bg-cyan-600/70 dark:bg-cyan-400/80 items-center overflow-hidden-->
-<!--                     rounded-lg shadow-2xl hover:bg-red-600">-->
-<!--                    <div class="flex flex-col">-->
-<!--                        <p class="text-4xl font-bold capitalize">{{ rol }}</p>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <KeyIcon class="w-10 h-auto" />-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+            <!--            <h2 class="text-4xl mt-32">Roles</h2>-->
+            <!--            <div class="grid grid-cols-2 gap-2">-->
+            <!--                <div v-for="(rol, index) in rolesNameds"-->
+            <!--                    :key="index"-->
+            <!--                    class="col-span-1 px-4 py-6 my-2 w-5/6 flex justify-between-->
+            <!--                     bg-cyan-600/70 dark:bg-cyan-400/80 items-center overflow-hidden-->
+            <!--                     rounded-lg shadow-2xl hover:bg-red-600">-->
+            <!--                    <div class="flex flex-col">-->
+            <!--                        <p class="text-4xl font-bold capitalize">{{ rol }}</p>-->
+            <!--                    </div>-->
+            <!--                    <div>-->
+            <!--                        <KeyIcon class="w-10 h-auto" />-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
 
         </div>
 

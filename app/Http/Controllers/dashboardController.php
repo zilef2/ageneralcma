@@ -6,9 +6,11 @@ use App\helpers\MyGlobalHelp;
 use App\helpers\Myhelp;
 use App\helpers\MyModels;
 use App\Models\Inspeccion;
+use App\Models\prestamoActual;
 use App\Models\Role;
 use App\Models\User;
 use Doctrine\DBAL\Query\QueryException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -16,29 +18,66 @@ use Inertia\Inertia;
 class dashboardController extends Controller
 {
 
-    function getHorarios(){
+    function getHorarios()
+    {
         try {
             // Intenta obtener los datos de la base de datos secundaria
-            DB::purge('secondary_db');
-            $horarios = DB::connection('secondary_db')->table('Horario')->get();
+            $this->getTablaSimon('horarios', 'Horario');
+//            $horariosAqui = DB::table('horarios')->count();
+//            if ($horariosAqui == 0) {
+//
+//                $horarios = DB::connection('secondary_db')->table('Horario')->get();
+//
+//                // Inserta los datos en la base de datos principal
+//                foreach ($horarios as $horario) {
+//                    DB::table('horarios')->insert([
+//                        'id' => $horario->id,
+//                        'docenteId' => $horario->docenteId,
+//                        'aulaId' => $horario->aulaId,
+//                        'horaInicio' => $horario->horaInicio,
+//                        'horaFin' => $horario->horaFin,
+//                        'dia' => $horario->dia,
+//                        'semestre' => $horario->semestre,
+//                    ]);
+//                }
+//                log::info("Horarios SI insertados");
+//            }else{
+//                log::info("Horarios no insertados");
+//            }
 
-            // Inserta los datos en la base de datos principal
-            foreach ($horarios as $horario) {
-                DB::table('horarios')->insert([
-                    'id' => $horario->id,
-                    'docenteId' => $horario->docenteId,
-                    'aulaId' => $horario->aulaId,
-                    'horaInicio' => $horario->horaInicio,
-                    'horaFin' => $horario->horaFin,
-                    'dia' => $horario->dia,
-                    'semestre' => $horario->semestre,
-                ]);
-            }
+
         } catch (QueryException $e) {
             // Si falla la conexión, continúa sin interrumpir
             Log::error("No se pudo conectar a la base de datos secundaria: " . $e->getMessage());
         }
     }
+
+    public function getTablaSimon($nombretablaAqui, $nombreTablaSimon)
+    {
+        DB::purge('secondary_db');
+        $EntidadAqui = DB::table($nombretablaAqui)->count();
+        if ($EntidadAqui == 0) {
+
+            $laEntidadSimon = DB::connection('secondary_db')->table($nombreTablaSimon)->get();
+            // Inserta los datos en la base de datos principal
+            foreach ($laEntidadSimon as $entiSimon) {
+                $data = (array)$entiSimon;
+                DB::table($nombretablaAqui)->insert($data);
+//                    'id' => $horario->id,
+//                    'docenteId' => $horario->docenteId,
+//                    'aulaId' => $horario->aulaId,
+//                    'horaInicio' => $horario->horaInicio,
+//                    'horaFin' => $horario->horaFin,
+//                    'dia' => $horario->dia,
+//                    'semestre' => $horario->semestre,
+//                ]);
+            }
+            log::info("Horarios SI insertados");
+        } else {
+            log::info("Horarios no insertados");
+        }
+    }
+
     function checkSecondaryDbConnection()
     {
         try {
@@ -53,24 +92,75 @@ class dashboardController extends Controller
     }
 
 
-    public function Dashboard()
+    public function Dashboard($nombredoc = null)
     {
         $numberPermissions = MyModels::getPermissionToNumber(Myhelp::EscribirEnLog($this, ' | dashboard antes de conectar a la bd2 | '));
+        $this->getTablaSimon('horarios', 'Horario');
+        $this->getTablaSimon('docentes', 'Docente');
+        $this->getTablaSimon('prestamo', 'Prestamo');
+        $this->getTablaSimon('aula', 'Aula');
 
-        $this->getHorarios();
 //            $articulos = DB::connection('secondary_db')->table('Articulo')->get();
 //            $articuloPrestamos = DB::connection('secondary_db')->table('ArticuloPrestamo')->get();
 //            $auditLogs = DB::connection('secondary_db')->table('AuditLog')->get();
 //            $aulas = DB::connection('secondary_db')->table('Aula')->get();
 //            $bitacoras = DB::connection('secondary_db')->table('Bitacora')->get();
 //            $cuentas = DB::connection('secondary_db')->table('Cuenta')->get();
-//            $docentes = DB::connection('secondary_db')->table('Docente')->get();
+        $docentes = DB::connection('secondary_db')->table('Docente')->get()->take(3);
+        $docentesAqui = DB::table('docentes')->get()->take(3);
 //            $funcionariosTecnologia = DB::connection('secondary_db')->table('FuncionariosTecnologia')->get();
-//            $horarios = DB::connection('secondary_db')->table('Horario')->get();
+        $horarios = DB::connection('secondary_db')->table('Horario')->get()->take(3);
+        $horariosAqui = DB::table('horarios')->get()->take(3);
+        $prestamosAqui = DB::table('prestamo')->get();
+        $AulaAqui = DB::table('aula')->get();
 //            $personal = DB::connection('secondary_db')->table('Personal')->get();
 //            $prestamos = DB::connection('secondary_db')->table('Prestamo')->get();
 //            $prestamosHistorico = DB::connection('secondary_db')->table('PrestamosHistorico')->get();
 //            $solicitudesFast = DB::connection('secondary_db')->table('SolicitudesFast')->get();
+//        $Obtenidos = [
+//            'horarios' => $horarios,
+//            'docentes' => $docentes,
+//        ];
+
+//        foreach ($prestamosAqui as $item) {
+//            $data = array_filter((array)$item, function ($value) {
+//                return !is_null($value);
+//            });
+//            if (count($data) > 9) {
+//                if (!isset($data['fecha'])) {
+//                    $data['fecha'] = '2024-01-01'; // Usa una fecha predeterminada adecuada
+//                }
+//                prestamoActual::create($data);
+//            }
+//        }
+
+        if ($nombredoc) {
+
+            $diaHoyNombre = $this->obtenerDiaDeLaSemana();
+            $Busqueda = DB::table('horarios as p')
+                ->select('p.*', 'a.id as aulid', 'a.nombreAula', 'd.id as docid', 'd.nombre', 'd.tipousuario')
+                ->leftJoin('aula as a', 'p.aulaId', '=', 'a.id')
+                ->leftJoin('docentes as d', 'p.docenteId', '=', 'd.id')
+                ->whereIn('p.docenteId', function ($query) use ($nombredoc) {
+                    $query->select('id')
+                        ->from('docentes')
+                        ->where('nombre', 'LIKE', '%' . $nombredoc . '%');
+                })
+                ->where('p.semestre', '2024-2')
+                ->where('p.dia', $diaHoyNombre)
+                ->get();
+        }
+
+        $losQueFaltan = $this->GetPrestamosHoy();
+        $Obtenidos = [
+            'horarios' => $horariosAqui,
+            'docentes' => $docentesAqui,
+            'prestamo' => $prestamosAqui,
+            'AulaAqui' => $AulaAqui,
+            'losQueFaltan' => $losQueFaltan,
+        ];
+
+
         return Inertia::render('Dashboard', [
             'users' => (int)User::count(),
             'roles' => (int)Role::count(),
@@ -78,7 +168,45 @@ class dashboardController extends Controller
             'rolesNameds' => Role::where('name', '<>', 'superadmin')->pluck('name'),
 
             'numberPermissions' => $numberPermissions,
-            'horarios' => $horarios ?? ['no hay coneccion'],
+            'Obtenidos' => $Obtenidos ?? ['no hay coneccion'],
+            'Busqueda' => $Busqueda ?? '',
         ]);
+    }
+
+    function obtenerDiaDeLaSemana(): string
+    {
+        $dias = [
+            'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
+        ];
+
+        $diaNumero = date('N') - 1; // 'N' devuelve el día de la semana (1 para lunes, 7 para domingo)
+
+        return $dias[$diaNumero];
+    }
+
+    private function GetPrestamosHoy(): Collection
+    {
+        $prestamos = DB::table('prestamo as p')
+            ->select(
+                'p.docenteId',
+                'p.aulaId',
+                'p.fecha',
+                'p.horafin',
+                'p.horainicio',
+                'p.observaciones',
+                'd.nombre as docente_nombre',
+                'a.nombreAula'
+            )
+            ->join('docentes as d', 'p.docenteId', '=', 'd.id')
+            ->join('aula as a', 'p.aulaId', '=', 'a.id')
+//            ->where('p.dia', 'Viernes')
+            ->get();
+
+        // Formatear las horas
+        $prestamos->each(function ($prestamo) {
+            $prestamo->horainicio = \Carbon\Carbon::createFromFormat('H:i', sprintf('%02d:%02d', floor($prestamo->horainicio / 100), $prestamo->horainicio % 100))->format('g:i A');
+            $prestamo->horafin = \Carbon\Carbon::createFromFormat('H:i', sprintf('%02d:%02d', floor($prestamo->horafin / 100), $prestamo->horafin % 100))->format('g:i A');
+        });
+        return $prestamos;
     }
 }

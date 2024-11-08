@@ -22,6 +22,8 @@ return [
 		'objetos' => 'objetos',
 		'horario' => 'Horario',
 		'Horario' => 'Horario',
+		'prestamoactual' => 'Prestamoactual',
+		'prestamoActual' => 'prestamoActual',
 		//aquipues
     ],
 
@@ -34,6 +36,8 @@ return [
 		'objetos' => 'objetos',
 		'horario' => 'Horario',
 		'Horario' => 'Horario',
+		'prestamoactual' => 'Prestamoactual',
+		'prestamoActual' => 'prestamoActual',
 		//aquipues
 
         //transaccion

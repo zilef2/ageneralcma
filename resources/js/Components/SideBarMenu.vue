@@ -28,6 +28,7 @@ const sidebarButtonsNormal = [ //SAME AS WEB.PHP
 	'llaves',
 	'objetos',
 	'Horario',
+	'prestamoActual',
 	//aquipuesSide
 ];
 
@@ -119,7 +120,8 @@ function capitalizeFirstLetter(string) {
         <button @click="toggleContent2" v-show="can(['isAdmin'])" class="text-blue-500">{{ data.showContent2 ? 'Ocultar' : 'Mostrar contenido' }}</button>
         <ul v-if="data.showContent2" class="space-y-2 my-4">
             <div class="" v-for="value in sidebarButtonsNormal">
-                <li v-show="can(['istesorera'])"
+<!--                v-show="can(['istesorera'])"-->
+                <li
                     class="text-white rounded-lg hover:bg-primary"
                     :class="route().current(value + '.index') ? 'bg-primary' : 'bg-gray-700'">
                     <Link :href="route(value+'.index')" class="flex items-center py-4 px-4">
