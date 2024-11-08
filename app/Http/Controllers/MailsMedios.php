@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\helpers\GranString;
 use App\Mail\MailableEstadoMedios;
+use App\Mail\NewEnviarMail;
 use DateTime;
 use Illuminate\Support\Facades\Mail;
 
@@ -14,15 +15,15 @@ class MailsMedios extends Controller
 
         $infoGigante = GranString::peroEstoQueEsss();
 
-        if(strlen($infoGigante) < 20){
+        if (strlen($infoGigante) < 20) {
             Mail::to("alejandro.madrid@colmayor.edu.co")->send(new MailableEstadoMedios([
-                    "observaString" => $infoGigante,
-                    "computador" => 'String muy corto',
-                    "HDMI" => 'String muy corto',
-                    "salones" => 'String muy corto',
-                    "demoras" => 'String muy corto',
-                ]));
-             return view('emails.estadoCopiar', [
+                "observaString" => $infoGigante,
+                "computador" => 'String muy corto',
+                "HDMI" => 'String muy corto',
+                "salones" => 'String muy corto',
+                "demoras" => 'String muy corto',
+            ]));
+            return view('emails.estadoCopiar', [
                 'mailData' => [
                     "observaString" => $infoGigante,
                     "computador" => 'String muy corto',
@@ -41,7 +42,7 @@ class MailsMedios extends Controller
         }
         preg_match_all("/hdmi\s([1-9]|1[0-9]|20)/i", $infoGigante, $matches);
         foreach ($matches[1] as $index => $match) {
-            $matches[1][$index] = 'HDMI#'. $match;
+            $matches[1][$index] = 'HDMI#' . $match;
         }
         $HDMI = implode(", ", $matches[1]);
         if (strcmp("", $HDMI) === 0) {
@@ -123,8 +124,8 @@ class MailsMedios extends Controller
         $hora = intval(date('H'));
         $mins = intval(date('i'));
         $conCopia = [];
-        if($hora > 21 && $mins > 40){
-            $conCopia = ["simon.pelaez@colmayor.edu.co","tecnologia@colmayor.edu.co","viceadministrativa@colmayor.edu.co"];
+        if ($hora > 21 && $mins > 40) {
+            $conCopia = ["simon.pelaez@colmayor.edu.co", "tecnologia@colmayor.edu.co", "viceadministrativa@colmayor.edu.co"];
         }
 
         if (strlen($infoGigante) > 3) {
@@ -167,5 +168,18 @@ class MailsMedios extends Controller
                 ]
             ]);
         }
+    }
+
+    public function enviar()
+    {
+        $conCopia = ["simon.pelaez@colmayor.edu.co", "tecnologia@colmayor.edu.co", "viceadministrativa@colmayor.edu.co"];
+        $dash = new dashboardController();
+        $pendientes = $dash->GetPrestamosHoy()->toArray();
+        Mail::to("alejandro.madrid@colmayor.edu.co")
+            ->cc($conCopia)
+            ->send(new NewEnviarMail($pendientes));
+
+
+        return "Mensaje Enviado";
     }
 }

@@ -1,9 +1,10 @@
-//composer dependencies
-//vue dependencies
-//composer errors
-//servidor acmainspecciones
-
-
+new class( node){
+    vue-datapicker
+}
+new class( laravel){
+    composer require maatwebsite/excel
+    misterdebug - crud-generator-laravel
+}
 //Aun no se deberian instalar en los proyectos
 
 //composer help

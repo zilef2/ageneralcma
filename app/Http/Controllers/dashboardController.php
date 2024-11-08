@@ -9,6 +9,7 @@ use App\Models\Inspeccion;
 use App\Models\prestamoActual;
 use App\Models\Role;
 use App\Models\User;
+use Carbon\Carbon;
 use Doctrine\DBAL\Query\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -63,19 +64,27 @@ class dashboardController extends Controller
             foreach ($laEntidadSimon as $entiSimon) {
                 $data = (array)$entiSimon;
                 DB::table($nombretablaAqui)->insert($data);
-//                    'id' => $horario->id,
-//                    'docenteId' => $horario->docenteId,
-//                    'aulaId' => $horario->aulaId,
-//                    'horaInicio' => $horario->horaInicio,
-//                    'horaFin' => $horario->horaFin,
-//                    'dia' => $horario->dia,
-//                    'semestre' => $horario->semestre,
-//                ]);
             }
             log::info("Horarios SI insertados");
         } else {
             log::info("Horarios no insertados");
         }
+    }
+
+    public function getTablaSimonAndReplace($nombretablaAqui, $nombreTablaSimon)
+    {
+        DB::purge('secondary_db');
+        $EntidadAqui = DB::table($nombretablaAqui)->count();
+
+        $laEntidadSimon = DB::connection('secondary_db')->table($nombreTablaSimon)->get();
+        DB::table($nombretablaAqui)->delete();
+        // Inserta los datos en la base de datos principal
+        foreach ($laEntidadSimon as $entiSimon) {
+            $data = (array)$entiSimon;
+            DB::table($nombretablaAqui)->insert($data);
+        }
+        log::info("$nombretablaAqui SI insertados");
+
     }
 
     function checkSecondaryDbConnection()
@@ -97,8 +106,10 @@ class dashboardController extends Controller
         $numberPermissions = MyModels::getPermissionToNumber(Myhelp::EscribirEnLog($this, ' | dashboard antes de conectar a la bd2 | '));
         $this->getTablaSimon('horarios', 'Horario');
         $this->getTablaSimon('docentes', 'Docente');
-        $this->getTablaSimon('prestamo', 'Prestamo');
+//        $this->getTablaSimonAndReplace('prestamo', 'Prestamo');
         $this->getTablaSimon('aula', 'Aula');
+        $this->getTablaSimon('articulo', 'Articulo');
+        $this->getTablaSimonAndReplace('articuloprestamo', 'ArticuloPrestamo');
 
 //            $articulos = DB::connection('secondary_db')->table('Articulo')->get();
 //            $articuloPrestamos = DB::connection('secondary_db')->table('ArticuloPrestamo')->get();
@@ -113,6 +124,7 @@ class dashboardController extends Controller
         $horariosAqui = DB::table('horarios')->get()->take(3);
         $prestamosAqui = DB::table('prestamo')->get();
         $AulaAqui = DB::table('aula')->get();
+        $articuloprestamo = DB::table('articuloprestamo')->get();
 //            $personal = DB::connection('secondary_db')->table('Personal')->get();
 //            $prestamos = DB::connection('secondary_db')->table('Prestamo')->get();
 //            $prestamosHistorico = DB::connection('secondary_db')->table('PrestamosHistorico')->get();
@@ -157,6 +169,7 @@ class dashboardController extends Controller
             'docentes' => $docentesAqui,
             'prestamo' => $prestamosAqui,
             'AulaAqui' => $AulaAqui,
+            'articuloprestamo' => $articuloprestamo,
             'losQueFaltan' => $losQueFaltan,
         ];
 
@@ -184,28 +197,20 @@ class dashboardController extends Controller
         return $dias[$diaNumero];
     }
 
-    private function GetPrestamosHoy(): Collection
+    public function GetPrestamosHoy(): Collection
     {
+        $this->getTablaSimonAndReplace('prestamo', 'Prestamo');
         $prestamos = DB::table('prestamo as p')
-            ->select(
-                'p.docenteId',
-                'p.aulaId',
-                'p.fecha',
-                'p.horafin',
-                'p.horainicio',
-                'p.observaciones',
-                'd.nombre as docente_nombre',
-                'a.nombreAula'
-            )
+            ->select('p.docenteId', 'p.aulaId', 'p.fecha', 'p.horafin', 'p.horainicio', 'p.observaciones', 'd.nombre as docente_nombre', 'a.nombreAula')
             ->join('docentes as d', 'p.docenteId', '=', 'd.id')
             ->join('aula as a', 'p.aulaId', '=', 'a.id')
-//            ->where('p.dia', 'Viernes')
+            ->orderBy('a.nombreAula', 'desc')
             ->get();
 
         // Formatear las horas
         $prestamos->each(function ($prestamo) {
-            $prestamo->horainicio = \Carbon\Carbon::createFromFormat('H:i', sprintf('%02d:%02d', floor($prestamo->horainicio / 100), $prestamo->horainicio % 100))->format('g:i A');
-            $prestamo->horafin = \Carbon\Carbon::createFromFormat('H:i', sprintf('%02d:%02d', floor($prestamo->horafin / 100), $prestamo->horafin % 100))->format('g:i A');
+            $prestamo->horainicio = Carbon::createFromFormat('H:i', sprintf('%02d:%02d', floor($prestamo->horainicio / 1), $prestamo->horainicio % 1))->format('g:i A');
+            $prestamo->horafin = Carbon::createFromFormat('H:i', sprintf('%02d:%02d', floor($prestamo->horafin / 1), $prestamo->horafin % 1))->format('g:i A');
         });
         return $prestamos;
     }

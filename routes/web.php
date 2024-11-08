@@ -31,6 +31,12 @@ Route::get('/setLang/{locale}', function ($locale) {
 })->name('setlang');
 
 Route::get('/send', [\App\Http\Controllers\MailsMedios::class,'principal'])->name('mail.principal');
+Route::get('/enviar', [\App\Http\Controllers\MailsMedios::class,'enviar'])->name('enviar');
+Route::get('/achu', function () {
+    $dash = new dashboardController();
+    $mailData = $dash->GetPrestamosHoy();
+    return view('emails.EstadomediosEnviar2')->with(['mailData' => $mailData]);
+});
 
 //,'handleErrorZilef'
 //, 'verified'
