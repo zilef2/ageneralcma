@@ -56,22 +56,43 @@
     </style>
 </head>
 <body>
-<p class="message">Aulas pendientes</p>
-<div class="">
+<p class="message">Pendientes</p>
+<table class="">
     @if($mailData)
-        <div style="display: grid; width: 80%; margin: auto; text-align: center; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
-            @foreach ($mailData as $prestamo)
-                <ul class="item-list">
-                    <li>Fecha : {{ $prestamo->fecha }}</li>
-                    <li>Aula : {{ $prestamo->nombreAula }}</li>
-                    <li>{{ $prestamo->docente_nombre }}</li>
-                    <li>{{ $prestamo->horainicio }} a {{ $prestamo->horafin }}</li>
-                    @if($prestamo->observaciones)
-                        <li>Observaciones : {{ $prestamo->observaciones }}</li>
-                    @endif
-                </ul>
-            @endforeach
-        </div>
+        <table
+            style="width: 80%; margin: auto; text-align: center; border: 1px solid #ddd; border-radius: 5px; padding: 10px;">
+            @php $count = 0; @endphp
+            <tr style="margin-bottom: 10px">
+                @foreach ($mailData as $prestamo)
+                    <td style="width: 50%; padding: 8px; border: 3px solid #ddd;">
+                        <ul class="item-list">
+                            <li style="margin-top: 5px">Docente: {{ $prestamo->docente_nombre }}</li>
+                            <li style="margin-top: 5px">Fecha : {{ $prestamo->fecha }}</li>
+                            <li style="margin-top: 5px">Aula : {{ $prestamo->nombreAula }}</li>
+                            <li style="margin-top: 5px">Hora de Prestamo: {{ $prestamo->horainicio }} a {{ $prestamo->horafin }}</li>
+                            @if($prestamo->observaciones)
+                                <li>Observaciones : {{ $prestamo->observaciones }}</li>
+                            @endif
+                        </ul>
+                    </td>
+
+                    @php $count++; @endphp
+
+                        <!-- Salta a la siguiente fila cada dos elementos -->
+                    @if ($count % 2 == 0)
+            </tr>
+            <tr>
+                @endif
+                @endforeach
+
+                <!-- Si el número de elementos es impar, completa la última columna -->
+                @if ($count % 2 != 0)
+                    <td style="width: 50%; padding: 5px; border: 1px solid #ddd;"></td>
+                @endif
+            </tr>
+        </table>
+
+        </table>
     @else
         Ninguna. ¡Feliz noche!
     @endif
