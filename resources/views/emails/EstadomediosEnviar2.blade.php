@@ -19,6 +19,13 @@
             text-align: center;
         }
 
+        .title2 {
+            padding: 22px;
+            background-color: rgba(189, 189, 189, 0.37);
+            font-size: 32px;
+            margin: auto;
+            text-align: center;
+        }
         .footer {
             padding: 22px;
             background-color: rgba(189, 189, 189, 0.37);
@@ -37,10 +44,10 @@
     </style>
 </head>
 <body>
-<p style="margin-bottom: 10px;">Pendientes</p>
+<p class="title2">Pendientes</p>
 @if($mailData)
-    <table style="width: 90%;  border: 1px solid #ddd; border-radius: 1px; padding: 2px;">
-        @php $count = 0; @endphp
+    <table style="width: 100%;  border: 1px solid #ddd; border-radius: 1px; padding: 2px;">
+        @php $count = 0; $countArticulo = 0;@endphp
         <tr style="margin-bottom: 10px">
             @foreach ($mailData as $prestamo)
                 <td style="text-align: center; padding: 4px; border: 3px solid #ddd;">
@@ -51,6 +58,10 @@
                         a {{ $prestamo->horafin }}</p>
                     @if($prestamo->observaciones)
                         <p>Observaciones : {{ $prestamo->observaciones }}</p>
+                    @endif
+                    @if($prestamo->nombreArticulo)
+                        <p>Artículo : {{ $prestamo->nombreArticulo }}</p>
+                        @php $countArticulo++; @endphp
                     @endif
                 </td>
                 @php $count++; @endphp
@@ -66,6 +77,14 @@
             @endif
         </tr>
     </table>
+    <p>
+        @if($countArticulo == 1) Se debe 1 articulo @endif
+    </p>
+    <p>
+    @if($countArticulo > 1) Se deben {{$countArticulo}} articulos @endif
+    </p>
+    <p>Numero de pendientes: {{count($mailData)}}</p>
+
 @else
     Ningun pendiente. ¡Feliz noche!
 @endif

@@ -74,7 +74,7 @@ class dashboardController extends Controller
     public function getTablaSimonAndReplace($nombretablaAqui, $nombreTablaSimon)
     {
         DB::purge('secondary_db');
-        $EntidadAqui = DB::table($nombretablaAqui)->count();
+//        $EntidadAqui = DB::table($nombretablaAqui)->count();
 
         $laEntidadSimon = DB::connection('secondary_db')->table($nombreTablaSimon)->get();
         DB::table($nombretablaAqui)->delete();
@@ -197,13 +197,28 @@ class dashboardController extends Controller
         return $dias[$diaNumero];
     }
 
-    public function GetPrestamosHoy(): Collection
-    {
+    public function GetPrestamosHoy(): Collection {
         $this->getTablaSimonAndReplace('prestamo', 'Prestamo');
+        $this->getTablaSimonAndReplace('articuloprestamo', 'ArticuloPrestamo');
+//        $laEntidadSimon = DB::connection('secondary_db')->table('ArticuloPrestamo')->get();
+
         $prestamos = DB::table('prestamo as p')
-            ->select('p.docenteId', 'p.aulaId', 'p.fecha', 'p.horafin', 'p.horainicio', 'p.observaciones', 'd.nombre as docente_nombre', 'a.nombreAula')
+            ->select(
+                'p.docenteId',
+                'p.aulaId',
+                'p.fecha',
+                'p.horafin',
+                'p.horainicio',
+                'p.observaciones',
+                'd.nombre as docente_nombre',
+                'a.nombreAula',
+                'art.nombreArticulo'
+            )
             ->join('docentes as d', 'p.docenteId', '=', 'd.id')
             ->join('aula as a', 'p.aulaId', '=', 'a.id')
+            ->leftJoin('articuloprestamo as ap', 'p.id', '=', 'ap.prestamoId')
+            ->leftJoin('articulo as art', 'ap.articuloId', '=', 'art.id')
+            ->orderBy('a.nombreAula', 'desc')
             ->orderBy('a.nombreAula', 'desc')
             ->get();
 
