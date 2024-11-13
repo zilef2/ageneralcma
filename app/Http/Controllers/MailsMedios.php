@@ -172,12 +172,12 @@ class MailsMedios extends Controller
 
     public function enviar()
     {
-//        $conCopia = ["simon.pelaez@colmayor.edu.co", "tecnologia@colmayor.edu.co", "viceadministrativa@colmayor.edu.co"];
-        $conCopia = ["tecnologia@colmayor.edu.co"];
+        $conCopia = ["simon.pelaez@colmayor.edu.co", "tecnologia@colmayor.edu.co", "viceadministrativa@colmayor.edu.co"];
+//        $conCopia = ["tecnologia@colmayor.edu.co"];
         $dash = new dashboardController();
         $pendientes = $dash->GetPrestamosHoy()->toArray();
         Mail::to("alejandro.madrid@colmayor.edu.co")
-//            ->cc($conCopia)
+            ->cc($conCopia)
             ->send(new NewEnviarMail($pendientes));
 
         return "Mensaje Enviado";
