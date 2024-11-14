@@ -197,7 +197,8 @@ class dashboardController extends Controller
         return $dias[$diaNumero];
     }
 
-    public function GetPrestamosHoy(): Collection {
+    public function GetPrestamosHoy(): array
+    {
         $this->getTablaSimonAndReplace('prestamo', 'Prestamo');
         $this->getTablaSimonAndReplace('articuloprestamo', 'ArticuloPrestamo');
 //        $laEntidadSimon = DB::connection('secondary_db')->table('ArticuloPrestamo')->get();
@@ -219,7 +220,12 @@ class dashboardController extends Controller
             ->leftJoin('articuloprestamo as ap', 'p.id', '=', 'ap.prestamoId')
             ->leftJoin('articulo as art', 'ap.articuloId', '=', 'art.id')
             ->orderBy('a.nombreAula', 'desc')
-            ->orderBy('a.nombreAula', 'desc')
+            ->get();
+
+        $soloArticulos = DB::table('articuloprestamo as ap')->select('art.nombreArticulo')
+//            ->leftJoin('prestamo as p', 'ap.articuloId', '=', 'art.id')
+            ->leftJoin('articulo as art', 'art.id', '=', 'ap.articuloId')
+            ->orderBy('art.nombreArticulo')
             ->get();
 
         // Formatear las horas
@@ -227,6 +233,6 @@ class dashboardController extends Controller
             $prestamo->horainicio = Carbon::createFromFormat('H:i', sprintf('%02d:%02d', floor($prestamo->horainicio / 1), $prestamo->horainicio % 1))->format('g:i A');
             $prestamo->horafin = Carbon::createFromFormat('H:i', sprintf('%02d:%02d', floor($prestamo->horafin / 1), $prestamo->horafin % 1))->format('g:i A');
         });
-        return $prestamos;
+        return [$prestamos->toArray(),$soloArticulos->toArray()];
     }
 }
