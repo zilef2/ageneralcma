@@ -11,7 +11,6 @@ import {
 } from "@heroicons/vue/24/solid";
 import { Link } from '@inertiajs/vue3';
 import { reactive, watch } from 'vue';
-
 const data = reactive({
     showContent: false,
     showContent2: true
@@ -22,7 +21,6 @@ const toggleContent = () => {
 const toggleContent2 = () => {
     data.showContent2 = !data.showContent2
 }
-
 const sidebarButtonsNormal = [ //SAME AS WEB.PHP
 	'docentes',
 	'llaves',
@@ -31,7 +29,6 @@ const sidebarButtonsNormal = [ //SAME AS WEB.PHP
 	'prestamoActual',
 	//aquipuesSide
 ];
-
 function capitalizeFirstLetter(string) {
     return string.replace(/\b\w/g, function (match) {
         return match.toUpperCase();

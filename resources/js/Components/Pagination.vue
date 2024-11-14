@@ -13,17 +13,6 @@ const data = reactive({
     params: {
         search: props.filters?.search,
         search2: props.filters?.search2,
-        searchNumCuenta: props.filters?.searchNumCuenta,
-        searchBanco: props.filters?.searchBanco,
-        searchtipo: props.filters?.searchtipo,
-        SoloGuardados: props.filters?.SoloGuardados,
-        searchContrapartida: props.filters?.searchContrapartida,
-        searchConcepto: props.filters?.searchConcepto,
-
-        codigo: props.filters.codigo,
-        numero_documento: props.filters.numero_documento,
-        valor_debito: props.filters.valor_debito,
-        valor_credito: props.filters.valor_credito,
 
         field: props.filters?.field,
         order: props.filters?.order,
@@ -42,12 +31,7 @@ const goto = (link) => {
 
 watchEffect(() => {
     data.params.search = props.filters?.search
-    data.params.searcLider = props.filters?.searcLider
-    data.params.field = props.filters?.field
-    data.params.order = props.filters?.order
-    data.params.perPage = props.filters?.perPage
-    data.params.SoloEnviados = props.filters?.SoloEnviados
-    data.params.SoloGuardados = props.filters?.SoloGuardados
+    data.params.search2 = props.filters?.search2
 })
 
 </script>

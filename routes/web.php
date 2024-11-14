@@ -1,24 +1,18 @@
 <?php
 
-use App\Exports\FormExport;
 use App\Http\Controllers\dashboardController;
 use App\Http\Controllers\EjemploController;
 use App\Http\Controllers\ParametrosController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\TransaccionController;
 
 use App\Http\Controllers\ZipController;
-use App\Http\Controllers\SubiExcelController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
-use Maatwebsite\Excel\Facades\Excel;
 
-use App\Mail\MailableEstadoMedios;
-use Illuminate\Support\Facades\Mail;
 
 //Route::get('/', [FormularioController::class, 'welcome'])->name('welcome');
 Route::get('/', function () { return redirect('/login'); });
@@ -47,8 +41,6 @@ Route::middleware(['auth'])->group(callback: function () {
     Route::get('/ejemplo', [EjemploController::class, 'ejemplo'])->name('ejemplo');
 
     Route::post('/user/destroy-bulk', [UserController::class, 'destroyBulk'])->name('user.destroy-bulk');
-    Route::get('/subirexceles', [SubiExcelController::class, 'subirexceles'])->name('subirexceles');
-//    Route::post('/uploadFileBancos', [SubiExcelController::class, 'uploadFileBancos'])->name('uploadFileBancos');
 
 
     Route::resource('/role', RoleController::class)->except('create', 'show', 'edit');
@@ -60,7 +52,6 @@ Route::middleware(['auth'])->group(callback: function () {
     Route::resource('/parametro', ParametrosController::class);
 
     Route::get('/DB_info', [UserController::class,'todaBD']);
-    Route::post('/Buscar_CP', [TransaccionController::class,'Buscar_CP'])->name('Buscar_CP');
     Route::get('/DescompresionDespliegue/{esAmbientePruebas}', [ZipController::class, 'DescompresionDespliegue']);
 
 

@@ -86,6 +86,32 @@ class dashboardController extends Controller
         log::info("$nombretablaAqui SI insertados");
 
     }
+    public function WriteOnDataBaseBitacora($prestamos):void
+    {
+        $aulas = ($prestamos[0]);
+        $StringBitacoraResumen = "";
+        foreach ($aulas as $index => $aula) {
+            $StringBitacoraResumen .= "Docente: $aula->docente_nombre ".
+            " Aula: $aula->nombreAula ".
+            " Fecha: $aula->fecha ".
+            " Hora de Prestamo: $aula->horainicio a $aula->horafin ";
+            if($aula->observaciones)
+            $StringBitacoraResumen .= " Observaciones: $aula->observaciones ";
+            if($aula->nombreArticulo)
+            $StringBitacoraResumen .= " Artículo: $aula->nombreArticulo ";
+        }
+
+        DB::connection('secondary_db')->table('Bitacora')->insert([
+//            'fecha' => Carbon::now(),
+            'fecha' => Carbon::now()->toIso8601String(),
+            'nombre' => 'Alejandro Madrid',
+            'cedula' => 1152194566,
+            'observacion' => "Llaves pendientes: $StringBitacoraResumen",
+            'estado' => 'INFORME',
+        ]);
+
+        log::info("se ha escrito en la bitacora");
+    }
 
     function checkSecondaryDbConnection()
     {
@@ -116,7 +142,6 @@ class dashboardController extends Controller
 //            $auditLogs = DB::connection('secondary_db')->table('AuditLog')->get();
 //            $aulas = DB::connection('secondary_db')->table('Aula')->get();
 //            $bitacoras = DB::connection('secondary_db')->table('Bitacora')->get();
-//            $cuentas = DB::connection('secondary_db')->table('Cuenta')->get();
         $docentes = DB::connection('secondary_db')->table('Docente')->get()->take(3);
         $docentesAqui = DB::table('docentes')->get()->take(3);
 //            $funcionariosTecnologia = DB::connection('secondary_db')->table('FuncionariosTecnologia')->get();
@@ -163,7 +188,7 @@ class dashboardController extends Controller
                 ->get();
         }
 
-        $losQueFaltan = $this->GetPrestamosHoy();
+        $losQueFaltan= $this->GetPrestamosHoy()[0];
         $Obtenidos = [
             'horarios' => $horariosAqui,
             'docentes' => $docentesAqui,

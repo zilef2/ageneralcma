@@ -89,7 +89,7 @@ const downloadExcel = () => { window.open('DB_info' , '_blank') }
                                         </span> -->
                                     </div>
                                     <DropdownLink :href="route('profile.edit')"> {{ lang().label.profile }}</DropdownLink>
-                                    <DropdownLink :href="route('subirexceles')"> Subir exceles </DropdownLink>
+<!--                                    <DropdownLink :href="route('subirexceles')"> Subir exceles </DropdownLink>-->
                                     <FuncionesSuperAdmin v-if="$page.props.auth.user.id === 1"/>
                                     <DropdownLink :href="route('logout')" method="post" as="button">
                                         {{ lang().label.logout }}

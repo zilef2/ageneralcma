@@ -56,18 +56,17 @@
     <table style="width: 100%;  border: 1px solid #ddd; border-radius: 1px; padding: 2px;">
         @php $count = 0; $countArticulo = 0;@endphp
         <tr style="margin-bottom: 4px">
-            @foreach ($mailData[0] as $prestamo)
-                <td style="text-align: center; padding: 4px; border: 3px solid #ddd;">
-                    <p style="margin-top: 1px">Docente: {{ $prestamo->docente_nombre }}</p>
-                    <p style="margin-top: 1px">Aula : {{ $prestamo->nombreAula }}</p>
-                    <p style="margin-top: 1px">Fecha : {{ $prestamo->fecha }}</p>
-                    <p style="margin-top: 1px">Hora de Prestamo: {{ $prestamo->horainicio }}
-                        a {{ $prestamo->horafin }}</p>
+            @forelse ($mailData[0] as $prestamo)
+                <td style="text-align: center; padding: 5px; border: 3px solid #ddd;">
+                    <p style="margin-top: 8px"><b>Docente</b>: {{ $prestamo->docente_nombre }}</p>
+                    <p style="margin-top: -12px"><b>Aula</b> : {{ $prestamo->nombreAula }}</p>
+                    <p style="margin-top: -12px"><b>Fecha</b> : {{ $prestamo->fecha }}</p>
+                    <p style="margin-top: -12px"><b>Hora de Prestamo</b>: {{ $prestamo->horainicio }} a {{ $prestamo->horafin }}</p>
                     @if($prestamo->observaciones)
-                        <p>Observaciones : {{ $prestamo->observaciones }}</p>
+                        <p><b>Observaciones</b> : {{ $prestamo->observaciones }}</p>
                     @endif
                     @if($prestamo->nombreArticulo)
-                        <p>Artículo : {{ $prestamo->nombreArticulo }}</p>
+                        <p><b>Artículo</b> : {{ $prestamo->nombreArticulo }}</p>
                         @php $countArticulo++; @endphp
                     @endif
                 </td>
@@ -77,37 +76,37 @@
         </tr>
         <tr>
                @endif
-            @endforeach
+            @empty
+                Ninguna llave pendiente
+            @endforelse
             <!-- Si el número de elementos es impar, completa la última columna -->
             @if ($count % 2 != 0)
                 <td style="width: 50%; padding: 5px; border: 1px solid #ddd;"></td>
             @endif
         </tr>
     </table>
-    @if(count($mailData[1]))
-        <p class="title3">Artículos</p>
-        <table style="width: 100%;  border: 1px solid #ddd; border-radius: 1px; padding: 2px;">
-            <tr style="margin-bottom: 4px">
-                @forelse ($mailData[1] as $articulos)
-                    <td style="text-align: center; padding: 4px; border: 3px solid #ddd;">
-                        <p style="margin-top: 1px">Articulo: {{ $articulos->nombreArticulo }}</p>
-                    </td>
-                    @php $count++; @endphp
-                        <!-- Salta a la siguiente fila cada dos elementos -->
-                    @if ($count % 2 == 0)
-            </tr>
-            <tr>
-                   @endif
-                @empty
-                    <p>Sin articulos pendientes</p>
-                @endforelse
-                <!-- Si el número de elementos es impar, completa la última columna -->
-                @if ($count % 2 != 0)
-                    <td style="width: 50%; padding: 5px; border: 1px solid #ddd;"></td>
-                @endif
-            </tr>
-        </table>
-    @endif
+    <p class="title3">Artículos</p>
+    <table style="width: 100%;  border: 1px solid #ddd; border-radius: 1px; padding: 0px;">
+        <tr style="margin-bottom: 4px">
+            @forelse ($mailData[1] as $articulos)
+                <td style="text-align: center; padding: 1px; border: 2px solid #8f8f8f;">
+                    <p style="margin-top: 1px"><b>Articulo</b>: {{ $articulos->nombreArticulo }}</p>
+                </td>
+                @php $count++; @endphp
+                    <!-- Salta a la siguiente fila cada dos elementos -->
+                @if ($count % 2 == 0)
+        </tr>
+        <tr>
+               @endif
+            @empty
+                <p>Sin articulos pendientes</p>
+            @endforelse
+            <!-- Si el número de elementos es impar, completa la última columna -->
+            @if ($count % 2 != 0)
+                <td style="width: 50%; padding: 5px; border: 1px solid #ddd;"></td>
+            @endif
+        </tr>
+    </table>
 
     <p class="title3">Resumen</p>
     <p>Numero de pendientes: {{count($mailData[0])}}</p>
