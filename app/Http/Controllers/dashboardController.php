@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\helpers\MyGlobalHelp;
 use App\helpers\Myhelp;
 use App\helpers\MyModels;
+use App\Models\docentes;
 use App\Models\Inspeccion;
-use App\Models\prestamoActual;
+use App\Models\prestamoHistorico;
 use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
@@ -14,6 +15,7 @@ use Doctrine\DBAL\Query\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class dashboardController extends Controller
@@ -23,7 +25,8 @@ class dashboardController extends Controller
     {
         try {
             // Intenta obtener los datos de la base de datos secundaria
-            $this->getTablaSimon('horarios', 'Horario');
+            $prestamosB = new PrestamosBothController();
+            $prestamosB->GettingTablaSimon('horarios', 'Horario');
 //            $horariosAqui = DB::table('horarios')->count();
 //            if ($horariosAqui == 0) {
 //
@@ -63,29 +66,17 @@ class dashboardController extends Controller
             // Inserta los datos en la base de datos principal
             foreach ($laEntidadSimon as $entiSimon) {
                 $data = (array)$entiSimon;
+                if ($nombretablaAqui == 'prestamo') {
+                    $data['simonid'] = $entiSimon['id'];
+                }
                 DB::table($nombretablaAqui)->insert($data);
             }
-            log::info("Horarios SI insertados");
+            log::info(" SI insertados");
         } else {
-            log::info("Horarios no insertados");
+            log::info(" no insertados");
         }
     }
 
-    public function getTablaSimonAndReplace($nombretablaAqui, $nombreTablaSimon)
-    {
-        DB::purge('secondary_db');
-//        $EntidadAqui = DB::table($nombretablaAqui)->count();
-
-        $laEntidadSimon = DB::connection('secondary_db')->table($nombreTablaSimon)->get();
-        DB::table($nombretablaAqui)->delete();
-        // Inserta los datos en la base de datos principal
-        foreach ($laEntidadSimon as $entiSimon) {
-            $data = (array)$entiSimon;
-            DB::table($nombretablaAqui)->insert($data);
-        }
-        log::info("$nombretablaAqui SI insertados");
-
-    }
     public function WriteOnDataBaseBitacora($prestamos):void
     {
         $aulas = ($prestamos[0]);
@@ -102,8 +93,7 @@ class dashboardController extends Controller
         }
 
         DB::connection('secondary_db')->table('Bitacora')->insert([
-//            'fecha' => Carbon::now(),
-            'fecha' => Carbon::now()->toIso8601String(),
+            'fecha' => Carbon::now()->toIso8601String(), //tomemorize
             'nombre' => 'Alejandro Madrid',
             'cedula' => 1152194566,
             'observacion' => "Llaves pendientes: $StringBitacoraResumen",
@@ -129,24 +119,21 @@ class dashboardController extends Controller
 
     public function Dashboard($nombredoc = null)
     {
+        $justTake = 3;
         $numberPermissions = MyModels::getPermissionToNumber(Myhelp::EscribirEnLog($this, ' | dashboard antes de conectar a la bd2 | '));
-        $this->getTablaSimon('horarios', 'Horario');
-        $this->getTablaSimon('docentes', 'Docente');
-//        $this->getTablaSimonAndReplace('prestamo', 'Prestamo');
-        $this->getTablaSimon('aula', 'Aula');
-        $this->getTablaSimon('articulo', 'Articulo');
-        $this->getTablaSimonAndReplace('articuloprestamo', 'ArticuloPrestamo');
-
+        $prestamosB = new PrestamosBothController();
+        $prestamosB->GettingTablaSimon('horarios', 'Horario');
+        $prestamosB->GettingTablaSimon('docentes', 'Docente');
+        $this->GettingTablaSimon('aula', 'Aula');
+        $this->GettingTablaSimon('articulo', 'Articulo');
+        $this->GettingTablaSimon('articuloprestamo', 'ArticuloPrestamo',1);
 //            $articulos = DB::connection('secondary_db')->table('Articulo')->get();
 //            $articuloPrestamos = DB::connection('secondary_db')->table('ArticuloPrestamo')->get();
 //            $auditLogs = DB::connection('secondary_db')->table('AuditLog')->get();
 //            $aulas = DB::connection('secondary_db')->table('Aula')->get();
 //            $bitacoras = DB::connection('secondary_db')->table('Bitacora')->get();
-        $docentes = DB::connection('secondary_db')->table('Docente')->get()->take(3);
-        $docentesAqui = DB::table('docentes')->get()->take(3);
-//            $funcionariosTecnologia = DB::connection('secondary_db')->table('FuncionariosTecnologia')->get();
-        $horarios = DB::connection('secondary_db')->table('Horario')->get()->take(3);
-        $horariosAqui = DB::table('horarios')->get()->take(3);
+        $docentesAqui = DB::table('docentes')->get()->take($justTake);
+        $horariosAqui = DB::table('horarios')->get()->take($justTake);
         $prestamosAqui = DB::table('prestamo')->get();
         $AulaAqui = DB::table('aula')->get();
         $articuloprestamo = DB::table('articuloprestamo')->get();
@@ -154,25 +141,8 @@ class dashboardController extends Controller
 //            $prestamos = DB::connection('secondary_db')->table('Prestamo')->get();
 //            $prestamosHistorico = DB::connection('secondary_db')->table('PrestamosHistorico')->get();
 //            $solicitudesFast = DB::connection('secondary_db')->table('SolicitudesFast')->get();
-//        $Obtenidos = [
-//            'horarios' => $horarios,
-//            'docentes' => $docentes,
-//        ];
-
-//        foreach ($prestamosAqui as $item) {
-//            $data = array_filter((array)$item, function ($value) {
-//                return !is_null($value);
-//            });
-//            if (count($data) > 9) {
-//                if (!isset($data['fecha'])) {
-//                    $data['fecha'] = '2024-01-01'; // Usa una fecha predeterminada adecuada
-//                }
-//                prestamoActual::create($data);
-//            }
-//        }
 
         if ($nombredoc) {
-
             $diaHoyNombre = $this->obtenerDiaDeLaSemana();
             $Busqueda = DB::table('horarios as p')
                 ->select('p.*', 'a.id as aulid', 'a.nombreAula', 'd.id as docid', 'd.nombre', 'd.tipousuario')
@@ -197,7 +167,6 @@ class dashboardController extends Controller
             'articuloprestamo' => $articuloprestamo,
             'losQueFaltan' => $losQueFaltan,
         ];
-
 
         return Inertia::render('Dashboard', [
             'users' => (int)User::count(),
@@ -224,22 +193,13 @@ class dashboardController extends Controller
 
     public function GetPrestamosHoy(): array
     {
-        $this->getTablaSimonAndReplace('prestamo', 'Prestamo');
-        $this->getTablaSimonAndReplace('articuloprestamo', 'ArticuloPrestamo');
+        $prestamosB = new PrestamosBothController();
+        $prestamosB->GettingTablaSimon('prestamo', 'Prestamo',1);
+        $prestamosB->GettingTablaSimon('articuloprestamo', 'ArticuloPrestamo',1);
 //        $laEntidadSimon = DB::connection('secondary_db')->table('ArticuloPrestamo')->get();
 
         $prestamos = DB::table('prestamo as p')
-            ->select(
-                'p.docenteId',
-                'p.aulaId',
-                'p.fecha',
-                'p.horafin',
-                'p.horainicio',
-                'p.observaciones',
-                'd.nombre as docente_nombre',
-                'a.nombreAula',
-                'art.nombreArticulo'
-            )
+            ->select('p.id', 'p.docenteId', 'p.aulaId', 'p.fecha', 'p.horafin', 'p.horainicio', 'p.observaciones', 'd.nombre as docente_nombre', 'a.nombreAula', 'art.nombreArticulo')
             ->join('docentes as d', 'p.docenteId', '=', 'd.id')
             ->join('aula as a', 'p.aulaId', '=', 'a.id')
             ->leftJoin('articuloprestamo as ap', 'p.id', '=', 'ap.prestamoId')
@@ -253,11 +213,79 @@ class dashboardController extends Controller
             ->orderBy('art.nombreArticulo')
             ->get();
 
+        $this->setIdPendientes($prestamos); //guarda los prestamos
+
         // Formatear las horas
         $prestamos->each(function ($prestamo) {
             $prestamo->horainicio = Carbon::createFromFormat('H:i', sprintf('%02d:%02d', floor($prestamo->horainicio / 1), $prestamo->horainicio % 1))->format('g:i A');
             $prestamo->horafin = Carbon::createFromFormat('H:i', sprintf('%02d:%02d', floor($prestamo->horafin / 1), $prestamo->horafin % 1))->format('g:i A');
         });
         return [$prestamos->toArray(),$soloArticulos->toArray()];
+    }
+
+
+    public function GetPrestamosAyer(&$aunEsta): bool
+    {
+        $prestamosB = new PrestamosBothController();
+        $prestamosHoy = $prestamosB->GettingTablaSimonNoInsert('Prestamo');
+
+        $prestamosAyer = DB::table('prestamo')->get();
+        foreach ($prestamosAyer as $index => $Payer) {
+            foreach ($prestamosHoy as $index2 => $Phoy) {
+                if ($Payer->simonid == $Phoy->id) {
+                    $aunEsta[$Payer->simonid] = $Payer;
+                    break;
+                }
+            }
+        }
+
+        $horaActual = Carbon::now();
+        $horaInicio = Carbon::today()->setTime(5, 0);  // 5:00 AM
+        $horaFin = Carbon::today()->setTime(7, 0);     // 7:00 AM
+
+        return $horaActual->between($horaInicio, $horaFin);
+    }public function WriteBitacoraAM($aunEsta): void
+    {
+        $StringBitacoraResumen = "Llaves aun pendientes: ";
+        foreach ($aunEsta as $index => $prestamo) {
+            $prestamo->docente_nombre = docentes::find($prestamo->docenteId)->nombre;
+            $prestamo->nombreAula = DB::table('aula')->Where('id',$prestamo->aulaId)->first()->nombreAula;
+
+            $arti = DB::table('articuloprestamo')->Where('prestamoId',$prestamo->id)->first();
+            $artiname = null;
+            if($arti)
+                $artiname = DB::table('articulo')->where('id',$arti->id)->first()->nombreArticulo;
+
+            $StringBitacoraResumen .= "Docente: $prestamo->docente_nombre " .
+                " Aula: $prestamo->nombreAula " .
+                " Fecha: $prestamo->fecha " .
+                " Hora de Prestamo: $prestamo->horainicio a $prestamo->horafin ";
+            if ($prestamo->observaciones)
+                $StringBitacoraResumen .= " Observaciones: $prestamo->observaciones ";
+            if ($artiname)
+                $StringBitacoraResumen .= " Artículo: $artiname ";
+            $StringBitacoraResumen .= " -|- ";
+        }
+
+        DB::connection('secondary_db')->table('Bitacora')->insert([
+            'fecha' => Carbon::now()->toIso8601String(), //tomemorize
+            'nombre' => 'Alejandro Madrid',
+            'cedula' => 1152194566,
+            'observacion' => $StringBitacoraResumen,
+            'estado' => 'INFORME',
+        ]);
+
+        log::info("se ha escrito en la bitacora");
+    }
+
+    private function setIdPendientes(Collection $prestamos): void
+    {
+        foreach ($prestamos as $index => $prestamo) {
+            $data = (array)$prestamo;
+            $data['simonid'] = $data['id'];
+
+            $data['fecha'] = Carbon::createFromFormat('Y-m-d H:i:s', $data['fecha']); //->format('Y-m-d')
+            prestamoHistorico::insertOrIgnore($data);
+        }
     }
 }

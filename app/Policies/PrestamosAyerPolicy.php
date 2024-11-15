@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
+use App\Models\PrestamosAyer;
 use App\Models\User;
-use App\Models\prestamoHistorico;
 use Illuminate\Auth\Access\Response;
 
-class prestamoHistoricoPolicy
+class PrestamosAyerPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,7 +19,7 @@ class prestamoHistoricoPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, prestamoHistorico $prestamoHistorico): bool
+    public function view(User $user, PrestamosAyer $prestamosAyer): bool
     {
         //
     }
@@ -35,7 +35,7 @@ class prestamoHistoricoPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, prestamoHistorico $prestamoHistorico): bool
+    public function update(User $user, PrestamosAyer $prestamosAyer): bool
     {
         //
     }
@@ -43,7 +43,7 @@ class prestamoHistoricoPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, prestamoHistorico $prestamoHistorico): bool
+    public function delete(User $user, PrestamosAyer $prestamosAyer): bool
     {
         //
     }
@@ -51,7 +51,7 @@ class prestamoHistoricoPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, prestamoHistorico $prestamoHistorico): bool
+    public function restore(User $user, PrestamosAyer $prestamosAyer): bool
     {
         //
     }
@@ -59,7 +59,7 @@ class prestamoHistoricoPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, prestamoHistorico $prestamoHistorico): bool
+    public function forceDelete(User $user, PrestamosAyer $prestamosAyer): bool
     {
         //
     }

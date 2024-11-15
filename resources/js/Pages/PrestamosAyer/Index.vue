@@ -13,9 +13,9 @@ import pkg from 'lodash';
 import Pagination from '@/Components/Pagination.vue';
 import {ChevronUpDownIcon, PencilIcon, TrashIcon} from '@heroicons/vue/24/solid';
 // import { CursorArrowRippleIcon, ChevronUpDownIcon,QuestionMarkCircleIcon, EyeIcon, PencilIcon, TrashIcon, UserGroupIcon } from '@heroicons/vue/24/solid';
-import Create from '@/Pages/prestamoHistorico/Create.vue';
-import Edit from '@/Pages/prestamoHistorico/Edit.vue';
-import Delete from '@/Pages/prestamoHistorico/Delete.vue';
+import Create from '@/Pages/PrestamosAyer/Create.vue';
+import Edit from '@/Pages/PrestamosAyer/Edit.vue';
+import Delete from '@/Pages/PrestamosAyer/Delete.vue';
 
 import Checkbox from '@/Components/Checkbox.vue';
 import InfoButton from '@/Components/InfoButton.vue';
@@ -43,7 +43,7 @@ const data = reactive({
         order: props.filters.order,
         perPage: props.perPage,
     },
-    prestamoHistoricoo: null,
+    PrestamosAyero: null,
     selectedId: [],
     multipleSelect: false,
     createOpen: false,
@@ -61,7 +61,7 @@ const order = (field) => {
 
 watch(() => _.cloneDeep(data.params), debounce(() => {
     let params = pickBy(data.params)
-    router.get(route("prestamoHistorico.index"), params, {
+    router.get(route("PrestamosAyer.index"), params, {
         replace: true,
         preserveState: true,
         preserveScroll: true,
@@ -72,8 +72,8 @@ const selectAll = (event) => {
     if (event.target.checked === false) {
         data.selectedId = []
     } else {
-        props.fromController?.data.forEach((prestamoHistorico) => {
-            data.selectedId.push(prestamoHistorico.id)
+        props.fromController?.data.forEach((PrestamosAyer) => {
+            data.selectedId.push(PrestamosAyer.id)
         })
     }
 }
@@ -110,20 +110,20 @@ const titulos = [
             <div class="px-4 sm:px-0">
                 <div class="rounded-lg overflow-hidden w-fit">
                     <PrimaryButton class="rounded-none" @click="data.createOpen = true"
-                        v-if="can(['create prestamoHistorico'])">
+                        v-if="can(['create PrestamosAyer'])">
                         {{ lang().button.new }}
                     </PrimaryButton>
 
-                    <Create v-if="can(['create prestamoHistorico'])" :numberPermissions="props.numberPermissions"
+                    <Create v-if="can(['create PrestamosAyer'])" :numberPermissions="props.numberPermissions"
                         :titulos="titulos" :show="data.createOpen" @close="data.createOpen = false" :title="props.title"
                         :losSelect=props.losSelect />
 
-                    <Edit v-if="can(['update prestamoHistorico'])" :titulos="titulos"
+                    <Edit v-if="can(['update PrestamosAyer'])" :titulos="titulos"
                         :numberPermissions="props.numberPermissions" :show="data.editOpen" @close="data.editOpen = false"
-                        :prestamoHistoricoa="data.prestamoHistoricoo" :title="props.title" :losSelect=props.losSelect />
+                        :PrestamosAyera="data.PrestamosAyero" :title="props.title" :losSelect=props.losSelect />
 
-                    <Delete v-if="can(['delete prestamoHistorico'])" :numberPermissions="props.numberPermissions"
-                        :show="data.deleteOpen" @close="data.deleteOpen = false" :prestamoHistoricoa="data.prestamoHistoricoo"
+                    <Delete v-if="can(['delete PrestamosAyer'])" :numberPermissions="props.numberPermissions"
+                        :show="data.deleteOpen" @close="data.deleteOpen = false" :PrestamosAyera="data.PrestamosAyero"
                         :title="props.title" />
                 </div>
             </div>
@@ -132,7 +132,7 @@ const titulos = [
                     <div class="flex space-x-2">
                         <SelectInput v-model="data.params.perPage" :dataSet="data.dataSet" />
                         <!-- <DangerButton @click="data.deleteBulkOpen = true"
-                            v-show="data.selectedId.length != 0 && can(['delete prestamoHistorico'])" class="px-3 py-1.5"
+                            v-show="data.selectedId.length != 0 && can(['delete PrestamosAyer'])" class="px-3 py-1.5"
                             v-tooltip="lang().tooltip.delete_selected">
                             <TrashIcon class="w-5 h-5" />
                         </DangerButton> -->
@@ -178,13 +178,13 @@ const titulos = [
                                 <td v-if="numberPermissions > 1" class="whitespace-nowrap py-4 w-12 px-2 sm:py-3">
                                     <div class="flex justify-center items-center">
                                         <div class="rounded-md overflow-hidden">
-                                            <InfoButton v-show="can(['update prestamoHistorico'])" type="button"
-                                                @click="(data.editOpen = true), (data.prestamoHistoricoo = claseFromController)"
+                                            <InfoButton v-show="can(['update PrestamosAyer'])" type="button"
+                                                @click="(data.editOpen = true), (data.PrestamosAyero = claseFromController)"
                                                 class="px-2 py-1.5 rounded-none" v-tooltip="lang().tooltip.edit">
                                                 <PencilIcon class="w-4 h-4" />
                                             </InfoButton>
-                                            <DangerButton v-show="can(['delete prestamoHistorico'])" type="button"
-                                                @click="(data.deleteOpen = true), (data.prestamoHistoricoo = claseFromController)"
+                                            <DangerButton v-show="can(['delete PrestamosAyer'])" type="button"
+                                                @click="(data.deleteOpen = true), (data.PrestamosAyero = claseFromController)"
                                                 class="px-2 py-1.5 rounded-none" v-tooltip="lang().tooltip.delete">
                                                 <TrashIcon class="w-4 h-4" />
                                             </DangerButton>
@@ -198,7 +198,7 @@ const titulos = [
                                     <span v-if="titulo['type'] === 'dinero'"> {{ number_format(claseFromController[titulo['order']], 0, true) }} </span>
                                     <span v-if="titulo['type'] === 'date'"> {{ formatDate(claseFromController[titulo['order']], false) }} </span>
                                     <span v-if="titulo['type'] === 'datetime'"> {{ formatDate(claseFromController[titulo['order']], true) }} </span>
-                                    <span v-if="titulo['type'] === 'foreign'"> {{ claseprestamoHistoricoa[titulo['order']][titulo['nameid']] }} </span>
+                                    <span v-if="titulo['type'] === 'foreign'"> {{ clasePrestamosAyera[titulo['order']][titulo['nameid']] }} </span>
                                 </td>
 
                             </tr>

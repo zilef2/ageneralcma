@@ -26,6 +26,7 @@ Route::get('/setLang/{locale}', function ($locale) {
 
 Route::get('/send', [\App\Http\Controllers\MailsMedios::class,'principal'])->name('mail.principal');
 Route::get('/enviar', [\App\Http\Controllers\MailsMedios::class,'enviar'])->name('enviar');
+Route::get('/EnviarBitacoraManana', [\App\Http\Controllers\MailsMedios::class,'EnviarBitacoraManana'])->name('EnviarBitacoraManana');
 Route::get('/achu', function () {
     $dash = new dashboardController();
     $mailData = $dash->GetPrestamosHoy();
@@ -61,7 +62,8 @@ Route::middleware(['auth'])->group(callback: function () {
 	Route::resource("/llaves", \App\Http\Controllers\LlavesController::class);
 	Route::resource("/objetos", \App\Http\Controllers\ObjetosController::class);
 	Route::resource("/Horario", \App\Http\Controllers\HorarioController::class);
-	Route::resource("/prestamoActual", \App\Http\Controllers\PrestamoActualController::class);
+	Route::resource("/prestamoHistorico", \App\Http\Controllers\prestamoHistoricoController::class);
+	Route::resource("/PrestamosAyer", \App\Http\Controllers\PrestamosAyerController::class);
 	//aquipues
     //</editor-fold>
 

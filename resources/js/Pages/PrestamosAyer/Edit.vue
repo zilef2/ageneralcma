@@ -12,7 +12,7 @@ import "vue-select/dist/vue-select.css";
 const props = defineProps({
     show: Boolean,
     title: String,
-    prestamoHistoricoa: Object,
+    PrestamosAyera: Object,
     titulos: Object, //parametros de la clase principal
     losSelect:Object,
 
@@ -47,19 +47,19 @@ props.titulos.forEach(names => {
 watchEffect(() => {
     if (props.show) {
         // data.justNames.forEach(element => {
-        //     form[element] =  props.prestamoHistoricoa[element]
+        //     form[element] =  props.PrestamosAyera[element]
         // });
         form.errors = {}
         props.titulos.forEach(names => {
-            form[names['order']] = props.prestamoHistoricoa[names['order']]
+            form[names['order']] = props.PrestamosAyera[names['order']]
         });
 
-        // form.codigo = props.prestamoHistoricoa?.codigo
+        // form.codigo = props.PrestamosAyera?.codigo
     }
 })
 
 const update = () => {
-    form.put(route('prestamoHistorico.update', props.prestamoHistoricoa?.id), {
+    form.put(route('PrestamosAyer.update', props.PrestamosAyera?.id), {
         preserveScroll: true,
         onSuccess: () => {
             emit("close")
@@ -86,7 +86,7 @@ const update = () => {
                         <div v-if="atributosform.type == 'id'" id="SelectVue">
                             <label name="labelSelectVue"> {{ atributosform.label }} </label>
                             <v-select :options="data[atributosform.idd]" label="title" v-model="form[atributosform.idd]"
-                                :value="data[atributosform.idd][props.prestamoHistoricoa.prestamoHistorico_id]"></v-select>
+                                :value="data[atributosform.idd][props.PrestamosAyera.PrestamosAyer_id]"></v-select>
                             <InputError class="mt-2" :message="form.errors[atributosform.idd]" />
                         </div>
 

@@ -9,12 +9,18 @@ class docentes extends Model
 {
     use HasFactory;
 
-    protected $connection = 'secundaria';
-    protected $table = 'Docente';
+//    protected $connection = 'secundaria';
+//    protected $table = 'Docente';
 //$usuarios = DB::connection('secundaria')->table('usuarios')->get();
 
     protected $fillable = [
         'nombre',
+        'correo',
+        'telefono',
+        'facultad',
+        'cedula',
+        'tipocontrato',
+        'tipousuario',
     ];
 
 }

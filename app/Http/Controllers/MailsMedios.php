@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\helpers\GranString;
 use App\Mail\MailableEstadoMedios;
 use App\Mail\NewEnviarMail;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Facades\Mail;
 
@@ -184,6 +185,31 @@ class MailsMedios extends Controller
             ->cc($conCopia)
             ->send(new NewEnviarMail($pendientes));
 
-        return "Mensaje Enviado";
+        $rando = random_int(10, 10000);
+        return "Mensaje 10pm Enviado | Rand =$rando";
+    }
+
+    //
+    public function EnviarBitacoraManana(){
+
+        $aunEsta = [];
+        $dash = new dashboardController();
+
+        //mande correo pero si esta entre las 5am y 7am
+        if (!$dash->GetPrestamosAyer($aunEsta)) {
+            $dash->WriteBitacoraAM($aunEsta);
+            Mail::raw('En la bitacora se escribio que hay ' . count($aunEsta) . ' llaves pendientes aun.', function ($message) {
+                $message->to('alejandro.madrid@colmayor.edu.co')
+//                    ->cc('simon.pelaez@colmayor.edu.co')
+                    ->subject('Mensaje enviado a las ' . Carbon::now()->format('d-m-Y H:i'));
+            });
+        } else {
+            Mail::raw('En la bitacora no se escribe despues de las 7am', function ($message) {
+                $message->to('alejandro.madrid@colmayor.edu.co')
+//                    ->cc('simon.pelaez@colmayor.edu.co')
+                    ->subject('Mensaje no se envio a la hora correcta');
+            });
+        }
+        return "Mensaje mañanero Enviado";
     }
 }

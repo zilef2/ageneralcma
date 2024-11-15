@@ -14,7 +14,7 @@ php artisan db:seed --class = NombreDelSeeder
 
     public function up(): void
     {
-        Schema::create('prestamo_actuals', function (Blueprint $table) {
+        Schema::create('prestamo_historico', function (Blueprint $table) {
             $table->id();
             $table->BigInteger('docenteId');
             $table->BigInteger('aulaId');

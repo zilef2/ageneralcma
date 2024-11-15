@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class prestamoHistoricoSeeder extends Seeder
+class PrestamosAyerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
