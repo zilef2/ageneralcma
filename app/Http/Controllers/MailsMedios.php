@@ -171,7 +171,8 @@ class MailsMedios extends Controller
         }
     }//se dejara de usar
 
-    public function enviar(){
+    public function enviar()
+    {
 
         $conCopia = ["simon.pelaez@colmayor.edu.co", "tecnologia@colmayor.edu.co", "viceadministrativa@colmayor.edu.co"];
 //        $conCopia = ["tecnologia@colmayor.edu.co"];
@@ -185,12 +186,17 @@ class MailsMedios extends Controller
             ->cc($conCopia)
             ->send(new NewEnviarMail($pendientes));
 
-        $rando = random_int(10, 10000);
-        return "Mensaje 10pm Enviado | Rand =$rando";
+        $rando = Carbon::now()
+            ->format('d-m-Y H:i');
+        $rando2 = Carbon::now()
+            ->diffForHumans(Carbon::parse('21-12-2024'));
+
+        return "Mensaje 10pm Enviado | Enviado a las $rando. Falta para salir a vacaciones: $rando2";
     }
 
-    //
-    public function EnviarBitacoraManana(){
+    //web
+    public function EnviarBitacoraManana(): string
+    {
 
         $aunEsta = [];
         $dash = new dashboardController();
