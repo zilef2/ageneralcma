@@ -193,6 +193,16 @@ class MailsMedios extends Controller
 
         return "Mensaje 10pm Enviado | Enviado a las $rando. Falta para salir a vacaciones: $rando2";
     }
+    public function enviarSoloAmi()
+    {
+
+        $dash = new dashboardController();
+        $pendientes = $dash->GetPrestamosHoy();
+        Mail::to("alejofg2@gmail.com")->send(new NewEnviarMail($pendientes));
+        $rando = Carbon::now()->format('d-m-Y H:i');
+        $rando2 = Carbon::now()->diffForHumans(Carbon::parse('21-12-2024'));
+        return "Mensaje a fg2 10pm Enviado | Enviado a las $rando. Falta para salir a vacaciones: $rando2";
+    }
 
     //web
     public function EnviarBitacoraManana(): string

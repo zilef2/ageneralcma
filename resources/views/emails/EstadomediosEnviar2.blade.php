@@ -125,7 +125,12 @@
             @php $count = 0;@endphp
             @forelse ($mailData[1] as $articulos)
                 <td>
-                    <p style="margin-top: 1px"><b>Articulo</b>: {{ $articulos->nombreArticulo }}</p>
+                    <p style="margin-top: 1px"><b>Articulo</b>:
+                        @if(strtoupper($articulos->nombreArticulo[0] === 'P'))
+                            Portatil
+                        @endif
+                        {{ $articulos->nombreArticulo }}
+                    </p>
                 </td>
                 @php $count++; @endphp
                     <!-- Salta a la siguiente fila cada dos elementos -->
@@ -144,7 +149,7 @@
     </table>
 
     <p class="title3">Resumen</p>
-    <p>Numero de llaves pendientes: {{count($mailData[0])}}</p>
+    <p>Pendientes: {{count($mailData[0])}}</p>
     <p>@if($countArticulo == 1)
             Se debe 1 articulo
         @endif</p>

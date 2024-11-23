@@ -26,6 +26,7 @@ Route::get('/setLang/{locale}', function ($locale) {
 
 Route::get('/send', [\App\Http\Controllers\MailsMedios::class,'principal'])->name('mail.principal');
 Route::get('/enviar', [\App\Http\Controllers\MailsMedios::class,'enviar'])->name('enviar');
+Route::get('/enviarSoloAmi', [\App\Http\Controllers\MailsMedios::class,'enviarSoloAmi'])->name('enviarSoloAmi');
 Route::get('/EnviarBitacoraManana', [\App\Http\Controllers\MailsMedios::class,'EnviarBitacoraManana'])->name('EnviarBitacoraManana');
 Route::get('/achu', function () {
     $dash = new dashboardController();
