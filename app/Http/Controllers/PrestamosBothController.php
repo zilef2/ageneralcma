@@ -18,10 +18,10 @@ class PrestamosBothController extends Controller
         // Inserta los datos en la base de datos principal
         foreach ($laEntidadSimon as $entiSimon) {
             $data = (array)$entiSimon;
-            if ($nombretablaAqui == 'prestamo') {
+            if ($nombretablaAqui == 'prestamo' || $nombretablaAqui == 'horarios' || $nombretablaAqui == 'docentes') {
                 $data['simonid'] = $entiSimon->id;
             }
-            DB::table($nombretablaAqui)->insert($data);
+            DB::table($nombretablaAqui)->insertOrIgnore($data);
         }
         log::info("$nombretablaAqui SI insertados");
     }

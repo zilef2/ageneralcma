@@ -15,7 +15,8 @@ class Horario extends Model
         'horaInicio' ,
         'horaFin' ,
         'dia' ,
-        'semestre'
+        'semestre',
+        'simonid',
     ];
 
 }

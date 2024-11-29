@@ -111,7 +111,7 @@ class dashboardController extends Controller
             return true;
         } catch (QueryException $e) {
             // Registrar el error o mostrar un mensaje si se requiere
-            \Log::error("No se pudo conectar a la base de datos secundaria: " . $e->getMessage());
+            Log::error("No se pudo conectar a la base de datos secundaria: " . $e->getMessage());
             return false; // Retornar false para indicar que la conexión falló
         }
     }
@@ -124,9 +124,10 @@ class dashboardController extends Controller
         $prestamosB = new PrestamosBothController();
         $prestamosB->GettingTablaSimon('horarios', 'Horario');
         $prestamosB->GettingTablaSimon('docentes', 'Docente');
-        $this->GettingTablaSimon('aula', 'Aula');
-        $this->GettingTablaSimon('articulo', 'Articulo');
-        $this->GettingTablaSimon('articuloprestamo', 'ArticuloPrestamo',1);
+
+        $prestamosB->GettingTablaSimon('aula', 'Aula');
+        $prestamosB->GettingTablaSimon('articulo', 'Articulo');
+        $prestamosB->GettingTablaSimon('articuloprestamo', 'ArticuloPrestamo',1);
 //            $articulos = DB::connection('secondary_db')->table('Articulo')->get();
 //            $articuloPrestamos = DB::connection('secondary_db')->table('ArticuloPrestamo')->get();
 //            $auditLogs = DB::connection('secondary_db')->table('AuditLog')->get();
@@ -278,13 +279,15 @@ class dashboardController extends Controller
         log::info("se ha escrito en la bitacora");
     }
 
-    private function setIdPendientes(Collection $prestamos): void
+    private function setIdPendientes(Collection $prestamos): void //tableAqui prestamo
     {
         foreach ($prestamos as $index => $prestamo) {
             $data = (array)$prestamo;
             $data['simonid'] = $data['id'];
+                // $data['fecha'] = Carbon::createFromFormat('Y-m-d H:i:s', $data['fecha']); //->format('Y-m-d')
+                $data['fecha'] = Carbon::parse($data['fecha']);
 
-            $data['fecha'] = Carbon::createFromFormat('Y-m-d H:i:s', $data['fecha']); //->format('Y-m-d')
+
             prestamoHistorico::insertOrIgnore($data);
         }
     }

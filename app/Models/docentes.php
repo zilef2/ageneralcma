@@ -21,6 +21,7 @@ class docentes extends Model
         'cedula',
         'tipocontrato',
         'tipousuario',
+        'simonid',
     ];
 
 }
