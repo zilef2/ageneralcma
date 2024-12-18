@@ -201,8 +201,8 @@ class dashboardController extends Controller
 
         $prestamos = DB::table('prestamo as p')
             ->select('p.id', 'p.docenteId', 'p.aulaId', 'p.fecha', 'p.horafin', 'p.horainicio', 'p.observaciones', 'd.nombre as docente_nombre', 'a.nombreAula', 'art.nombreArticulo')
-            ->join('docentes as d', 'p.docenteId', '=', 'd.id')
-            ->join('aula as a', 'p.aulaId', '=', 'a.id')
+            ->leftJoin('docentes as d', 'p.docenteId', '=', 'd.id')
+            ->leftJoin('aula as a', 'p.aulaId', '=', 'a.id')
             ->leftJoin('articuloprestamo as ap', 'p.id', '=', 'ap.prestamoId')
             ->leftJoin('articulo as art', 'ap.articuloId', '=', 'art.id')
             ->orderBy('a.nombreAula', 'desc')

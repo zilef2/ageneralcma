@@ -31,6 +31,7 @@ Route::get('/EnviarBitacoraManana', [\App\Http\Controllers\MailsMedios::class,'E
 Route::get('/achu', function () {
     $dash = new dashboardController();
     $mailData = $dash->GetPrestamosHoy();
+    // dd($mailData);
     return view('emails.EstadomediosEnviar2')->with(['mailData' => $mailData]);
 });
 

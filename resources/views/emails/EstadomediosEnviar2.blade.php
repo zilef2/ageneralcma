@@ -20,16 +20,16 @@
         }
 
         .title2 {
-            padding: 22px;
+            padding: 20px;
             background-color: rgba(189, 189, 189, 0.37);
-            font-size: 32px;
+            font-size: 28px;
             margin: auto;
             text-align: center;
         }
         .title3 {
             padding: 22px;
             background-color: rgba(189, 189, 189, 0.37);
-            font-size: 22px;
+            font-size: 24px;
             margin-top: 12px;
             text-align: center;
         }
@@ -91,10 +91,14 @@
         <tr>
             @forelse ($mailData[0] as $prestamo)
                 <td>
-                    <p style="margin-top: 8px"><b>Docente</b>: {{ $prestamo->docente_nombre }}</p>
+                    @if($prestamo->docente_nombre == '')
+                    <p style="margin-top: 8px"><b>Encargado</b>: Alejandro Madrid</p>
+                    @else
+                    <p style="margin-top: 8px"><b>Encargado</b>: {{ $prestamo->docente_nombre }}</p>
+                    @endif
                     <p style="margin-top: -12px"><b>Aula</b>: {{ $prestamo->nombreAula }}</p>
-                    <p style="margin-top: -12px"><b>Fecha</b>: {{ $prestamo->fecha }}</p>
-                    <p style="margin-top: -12px"><b>Hora de Prestamo</b>: {{ $prestamo->horainicio }}
+                    <p style="margin-top: -12px"><b>Fecha del prestamo</b>: {{ $prestamo->fecha }}</p>
+                    <p style="margin-top: -12px"><b>Horario</b>: {{ $prestamo->horainicio }}
                         a {{ $prestamo->horafin }}</p>
                     @if($prestamo->observaciones)
                         <p style="margin-top: -12px; margin-bottom: -4px;"><b>Observaciones</b> : {{ $prestamo->observaciones }}</p>

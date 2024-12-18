@@ -20,7 +20,31 @@ class NewEnviarMail extends Mailable
      */
     public function __construct($mailData)
     {
+        $auxiliar = $mailData[0];
+        setlocale(LC_TIME, 'es_ES.UTF-8', 'Spanish_Spain.UTF-8', 'es_ES', 'Spanish');
+        foreach ($auxiliar as $key => $prestamo) {
+            $mailData[0][$key]->fecha = $this->formatearFecha($prestamo->fecha);
+        }
         $this->mailData = $mailData;
+    }
+
+    function formatearFecha($fecha)
+    {
+        $dateTime = new \DateTime($fecha);
+        $anioActual = date('Y');
+
+             // Formatear la fecha
+
+        $AMPM = $dateTime->format('g:ia');
+        if ($dateTime->format('Y') == $anioActual) {
+            // Formato: 10 de diciembre 12:32pm
+            $formato = strftime('%e de %B ', $dateTime->getTimestamp());
+        } else {
+            // Formato: 10 de diciembre 2023 12:32pm
+            $formato = strftime('%e de %B %Y ', $dateTime->getTimestamp());
+        }
+        $formato .= $AMPM;
+        return $formato;
     }
 
     /**
