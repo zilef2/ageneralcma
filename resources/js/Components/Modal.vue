@@ -48,7 +48,6 @@ onUnmounted(() => {
     document.body.style.overflow = null;
 });
 
-    console.log("=>(Modal.vue:51) props.maxWidth", props.maxWidth);
 const maxWidthClass = computed(() => {
     console.log("=>(Modal.vue:53) props.maxWidth", props.maxWidth);
     return {

@@ -10,7 +10,7 @@ import {
     BanknotesIcon,
 } from "@heroicons/vue/24/solid";
 import { Link } from '@inertiajs/vue3';
-import { reactive, watch } from 'vue';
+import { reactive } from 'vue';
 const data = reactive({
     showContent: false,
     showContent2: true
@@ -118,7 +118,6 @@ function capitalizeFirstLetter(string) {
         <button @click="toggleContent2" v-show="can(['isAdmin'])" class="text-blue-500">{{ data.showContent2 ? 'Ocultar' : 'Mostrar contenido' }}</button>
         <ul v-if="data.showContent2" class="space-y-2 my-4">
             <div class="" v-for="value in sidebarButtonsNormal">
-<!--                v-show="can(['istesorera'])"-->
                 <li
                     class="text-white rounded-lg hover:bg-primary"
                     :class="route().current(value + '.index') ? 'bg-primary' : 'bg-gray-700'">
