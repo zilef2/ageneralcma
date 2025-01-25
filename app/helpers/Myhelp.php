@@ -16,13 +16,23 @@ use Inertia\Inertia;
 
 class Myhelp {
 
-    public static function AuthU(): \Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Auth\Authenticatable
+    public static function AuthU(): ?\App\Models\User
     {
         $TheUser = Auth::user();
-        if($TheUser){
+        if ($TheUser instanceof \App\Models\User) {
             return $TheUser;
         }
-        return redirect()->to('/');
+
+//        return redirect()->to('/');
+        abort(403, 'Unauthorized');
+    }
+    public static function AuthUid(): ?int
+    {
+        $TheUser = Auth::user();
+        if ($TheUser instanceof \App\Models\User) {
+            return $TheUser->id;
+        }
+        abort(403, 'Unauthorized');
     }
 
     //STRING S
